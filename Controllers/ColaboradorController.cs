@@ -13,7 +13,8 @@ public class ColaboradorController : ControllerBase
     {    
         Console.WriteLine("Webhook received with payload: ");
         Console.WriteLine(payload.ToString());
-        return Ok("Webhook received successfully");
+        var response = new { message = "Webhook received successfully",  payload };
+        return Ok(response);
     }
     
 
