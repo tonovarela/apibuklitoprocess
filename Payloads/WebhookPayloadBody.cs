@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 
 namespace apiBukLitoprocess.Clases;
-public class Data
+public class WebhookPayloadBody
 {
        [JsonPropertyName("event_type")]
         public required string EventType { get; set; }
@@ -14,7 +14,7 @@ public class Data
         public required string TenantUrl { get; set; }
 
         [JsonPropertyName("employee_id")]
-        public long EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
 
         [JsonPropertyName("employment_status")]
         public required string EmploymentStatus { get; set; }

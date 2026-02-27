@@ -1,4 +1,4 @@
-using System;
+
 using System.Text.Json.Serialization;
 
 namespace apiBukLitoprocess.Clases;
@@ -6,7 +6,7 @@ namespace apiBukLitoprocess.Clases;
 public class WebhookPayload
 {
         [JsonPropertyName("data")]
-        public required Data Data { get; set; }
+        public required WebhookPayloadBody Data { get; set; }
 
 
         public override string ToString()
