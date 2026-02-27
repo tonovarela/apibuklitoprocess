@@ -42,3 +42,6 @@ Este proyecto es una API en ASP.NET Core para recibir webhooks relacionados con 
 
 ## Licencia
 Este proyecto es de uso educativo y puede ser modificado según tus necesidades.
+
+
+ngrok http 80
