@@ -15,6 +15,7 @@
   <ItemGroup>
     <Folder Include="Clases/" />
     <Folder Include="Payloads/" />
+    <Folder Include="ResponseApi/" />
   </ItemGroup>
 
 </Project>
