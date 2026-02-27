@@ -1,0 +1,43 @@
+# Archivos y carpetas ignorados por Git
+
+# Build y dependencias
+bin/
+obj/
+
+# Archivos de usuario de Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de configuración
+appsettings.*.json
+
+# Archivos de logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de publicación
+*.publishsettings
+
+# Archivos de paquetes
+*.nupkg
+
+# Archivos de test
+TestResults/
+
+# Archivos de VS Code
+.vscode/
+
+# Otros
+*.swp
+*.bak
+*.old
+
