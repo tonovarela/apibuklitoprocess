@@ -16,6 +16,7 @@
   <ItemGroup>
     <Folder Include="clases/" />
     <Folder Include="conf/" />
+    <Folder Include="helpers/" />
     <Folder Include="payloads/" />
     <Folder Include="responseApi/" />
   </ItemGroup>

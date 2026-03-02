@@ -1,9 +1,11 @@
-namespace apiBukLitoprocess.ResponseApi
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Text.Json.Serialization;
+using System.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using apiBukLitoprocess.helpers;
 
+namespace apiBukLitoprocess.responseApi
+{
     public partial class ResponseColaborador
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -385,14 +387,17 @@ namespace apiBukLitoprocess.ResponseApi
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("idColaborador")]
+        [JsonConverter(typeof(StringCustomConverter))]
         public string? idColaborador { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("numInt")]
-        public long? numInt { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? numInt { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("numExt")]
+        [JsonConverter(typeof(StringCustomConverter))]
         public string? numExt { get; set; }
 
         [JsonPropertyName("Alergias")]
@@ -522,4 +527,5 @@ namespace apiBukLitoprocess.ResponseApi
         [JsonPropertyName("responsability_details")]
         public List<object>? responsability_details { get; set; }
     }
+
 }

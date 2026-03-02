@@ -1,5 +1,6 @@
 using apiBukLitoprocess.conf;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace apiBukLitoprocess.Clases;
 
@@ -22,23 +23,28 @@ public class RestClientService
     
     public async Task<T?> GetAsync<T>(string url)
     {
-    var request = new HttpRequestMessage(HttpMethod.Get,URL_SERVICE + url);
-    // try
-    //     {
-       var response = await _httpClient.SendAsync(request);
-       return await response.Content.ReadFromJsonAsync<T>();
-        // } catch(System.Text.Json.JsonException ex)
-        // {
-        //     Console.WriteLine($"Error deserializing JSON response: {ex.Message}");
-        //     return default;
-        // }
+        var request = new HttpRequestMessage(HttpMethod.Get, URL_SERVICE + url);
+        var response = await _httpClient.SendAsync(request);
+        //response.EnsureSuccessStatusCode(); // Asegura que la respuesta fue exitosa
+
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        try
+        {
+            return JsonSerializer.Deserialize<T>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+        catch (JsonException ex)    
+        {
+            Console.WriteLine($"Error al deserializar JSON: {ex.Message}");
+            //Console.WriteLine($"JSON recibido: {jsonResponse}");
+            throw; // Vuelve a lanzar la excepción 
+        }
     }
 
     
     public async Task<TResponse?> PostAsync<TRequest, TResponse>(string url, TRequest data)
     {
-        var response = await _httpClient.PostAsJsonAsync( URL_SERVICE + url, data);
-        //response.EnsureSuccessStatusCode();
+        
+        var response = await _httpClient.PostAsJsonAsync( URL_SERVICE + url, data);        
         return await response.Content.ReadFromJsonAsync<TResponse>();
     }
 
