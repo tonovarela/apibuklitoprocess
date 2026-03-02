@@ -7,15 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.21" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Clases/" />
-    <Folder Include="Payloads/" />
-    <Folder Include="ResponseApi/" />
+    <Folder Include="clases/" />
+    <Folder Include="conf/" />
+    <Folder Include="payloads/" />
+    <Folder Include="responseApi/" />
   </ItemGroup>
 
 </Project>

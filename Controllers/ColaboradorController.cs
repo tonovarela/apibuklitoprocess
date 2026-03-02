@@ -1,6 +1,7 @@
 
 using System.Formats.Tar;
 using apiBukLitoprocess.Clases;
+using apiBukLitoprocess.ResponseApi;
 using Microsoft.AspNetCore.Mvc;
 
 namespace apiBukLitoprocess.Controllers;
@@ -26,7 +27,9 @@ public class ColaboradorController : ControllerBase
         try
         {
             int id_colaborador = payload.Data.EmployeeId;
-            var result = await _restClient.GetAsync<string>($"/employees/{id_colaborador}");
+            var result = await _restClient.GetAsync<ResponseColaborador>($"/employees/{id_colaborador}");
+            Console.WriteLine("Entrando a la consulta de buk");
+            Console.WriteLine(result?.data?.id);
         }
         catch (Exception e)
         {

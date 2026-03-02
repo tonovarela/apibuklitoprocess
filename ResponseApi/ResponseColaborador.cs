@@ -2,18 +2,16 @@ namespace apiBukLitoprocess.ResponseApi
 {
     using System;
     using System.Collections.Generic;
-
     using System.Text.Json.Serialization;
- 
 
     public partial class ResponseColaborador
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("data")]
-        public Data data { get; set; }
+        public BodyResponseColaborador? data { get; set; }
     }
 
-    public partial class Data
+    public partial class BodyResponseColaborador
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("person_id")]
@@ -25,51 +23,51 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("picture_url")]
-        public Uri picture_url { get; set; }
+        public string? picture_url { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("first_name")]
-        public string first_name { get; set; }
+        public string? first_name { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("surname")]
-        public string surname { get; set; }
+        public string? surname { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("second_surname")]
-        public string second_surname { get; set; }
+        public string? second_surname { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("full_name")]
-        public string full_name { get; set; }
+        public string? full_name { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("document_type")]
-        public string document_type { get; set; }
+        public string? document_type { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("document_number")]
-        public string document_number { get; set; }
+        public string? document_number { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("curp")]
-        public string curp { get; set; }
+        public string? curp { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("rfc")]
-        public string rfc { get; set; }
+        public string? rfc { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("code_sheet")]
-        public string code_sheet { get; set; }
+        public string? code_sheet { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("social_security")]
-        public string social_security { get; set; }
+        public string? social_security { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("gender")]
-        public string gender { get; set; }
+        public string? gender { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("birthday")]
@@ -77,36 +75,34 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("nationality")]
-        public string nationality { get; set; }
+        public string? nationality { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("civil_status")]
-        public string civil_status { get; set; }
+        public string? civil_status { get; set; }
 
         [JsonPropertyName("office_phone")]
-        public object office_phone { get; set; }
+        public object? office_phone { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("celular")]
-        
-        public long? celular { get; set; }
+        public string? celular { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("phone")]
-        
-        public long? phone { get; set; }
+        public string? phone { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("email")]
-        public string email { get; set; }
+        public string? email { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("personal_email")]
-        public string personal_email { get; set; }
+        public string? personal_email { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("address")]
-        public string address { get; set; }
+        public string? address { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("location_id")]
@@ -114,8 +110,7 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("postal_code")]
-       
-        public long? postal_code { get; set; }
+        public string? postal_code { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("active_since")]
@@ -123,27 +118,27 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("status")]
-        public string status { get; set; }
+        public string? status { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("payment_method")]
-        public string payment_method { get; set; }
+        public string? payment_method { get; set; }
 
         [JsonPropertyName("bank")]
-        public object bank { get; set; }
+        public object? bank { get; set; }
 
         [JsonPropertyName("account_number")]
-        public object account_number { get; set; }
+        public object? account_number { get; set; }
 
         [JsonPropertyName("clabe")]
-        public object clabe { get; set; }
+        public object? clabe { get; set; }
 
         [JsonPropertyName("client_number")]
-        public object client_number { get; set; }
+        public object? client_number { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("country_code")]
-        public string country_code { get; set; }
+        public string? country_code { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("private_role")]
@@ -151,82 +146,82 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("health_company")]
-        public string health_company { get; set; }
+        public string? health_company { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("pension_regime")]
-        public string pension_regime { get; set; }
+        public string? pension_regime { get; set; }
 
         [JsonPropertyName("pension_fund")]
-        public object pension_fund { get; set; }
+        public object? pension_fund { get; set; }
 
         [JsonPropertyName("afc")]
-        public object afc { get; set; }
+        public object? afc { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("retired")]
         public bool? retired { get; set; }
 
         [JsonPropertyName("retirement_regime")]
-        public object retirement_regime { get; set; }
+        public object? retirement_regime { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("payment_currency")]
-        public string payment_currency { get; set; }
+        public string? payment_currency { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("period_type")]
-        public string period_type { get; set; }
+        public string? period_type { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("custom_attributes")]
-        public DataCustomAttributes custom_attributes { get; set; }
+        public DataCustomAttributes? custom_attributes { get; set; }
 
         [JsonPropertyName("active_until")]
-        public object active_until { get; set; }
+        public object? active_until { get; set; }
 
         [JsonPropertyName("termination_reason")]
-        public object termination_reason { get; set; }
+        public object? termination_reason { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("current_job")]
-        public CurrentJob current_job { get; set; }
+        public CurrentJob? current_job { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("family_responsabilities")]
-        public List<FamilyResponsability> family_responsabilities { get; set; }
+        public List<FamilyResponsability>? family_responsabilities { get; set; }
     }
 
     public partial class CurrentJob
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("periodicity")]
-        public string periodicity { get; set; }
+        public string? periodicity { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("frequency")]
-        public string frequency { get; set; }
+        public string? frequency { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("working_schedule_type")]
-        public string working_schedule_type { get; set; }
+        public string? working_schedule_type { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("zone_assignment")]
         public bool? zone_assignment { get; set; }
 
         [JsonPropertyName("union")]
-        public object union { get; set; }
+        public object? union { get; set; }
 
         [JsonPropertyName("project")]
-        public object project { get; set; }
+        public object? project { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("days")]
-        public List<string> days { get; set; }
+        public List<string>? days { get; set; }
 
         [JsonPropertyName("previous_job_id")]
-        public object previous_job_id { get; set; }
+        public object? previous_job_id { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("id")]
@@ -241,7 +236,7 @@ namespace apiBukLitoprocess.ResponseApi
         public DateTimeOffset? start_date { get; set; }
 
         [JsonPropertyName("end_date")]
-        public object end_date { get; set; }
+        public object? end_date { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("area_id")]
@@ -249,18 +244,18 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("cost_center")]
-        public string cost_center { get; set; }
+        public string? cost_center { get; set; }
 
         [JsonPropertyName("active_until")]
-        public object active_until { get; set; }
+        public object? active_until { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("currency_code")]
-        public string currency_code { get; set; }
+        public string? currency_code { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("boss")]
-        public Boss boss { get; set; }
+        public Boss? boss { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("employee_id")]
@@ -272,32 +267,32 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("type_of_regime")]
-        public string type_of_regime { get; set; }
+        public string? type_of_regime { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("type_of_contract")]
-        public string type_of_contract { get; set; }
+        public string? type_of_contract { get; set; }
 
         [JsonPropertyName("end_of_contract")]
-        public object end_of_contract { get; set; }
+        public object? end_of_contract { get; set; }
 
         [JsonPropertyName("notice_date")]
-        public object notice_date { get; set; }
+        public object? notice_date { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("type_of_working_day")]
-        public string type_of_working_day { get; set; }
+        public string? type_of_working_day { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("regular_hours")]
-        public long? regular_hours { get; set; }
+        public double? regular_hours { get; set; }
 
         [JsonPropertyName("risk")]
-        public object risk { get; set; }
+        public object? risk { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("wage_type")]
-        public string wage_type { get; set; }
+        public string? wage_type { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("without_wage")]
@@ -308,7 +303,7 @@ namespace apiBukLitoprocess.ResponseApi
         public long? location_id { get; set; }
 
         [JsonPropertyName("union_id")]
-        public object union_id { get; set; }
+        public object? union_id { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("company_registration")]
@@ -316,15 +311,15 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("status")]
-        public string status { get; set; }
+        public string? status { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("role")]
-        public Role role { get; set; }
+        public Role? role { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("custom_attributes")]
-        public CurrentJobCustomAttributes custom_attributes { get; set; }
+        public CurrentJobCustomAttributes? custom_attributes { get; set; }
     }
 
     public partial class Boss
@@ -335,25 +330,25 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("document_type")]
-        public string document_type { get; set; }
+        public string? document_type { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("document_number")]
-        public string document_number { get; set; }
+        public string? document_number { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("rfc")]
-        public string rfc { get; set; }
+        public string? rfc { get; set; }
     }
 
     public partial class CurrentJobCustomAttributes
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("centroCostos")]
-        public string centroCostos { get; set; }
+        public string? centroCostos { get; set; }
 
         [JsonPropertyName("ctrlit_recinto")]
-        public object ctrlit_recinto { get; set; }
+        public object? ctrlit_recinto { get; set; }
     }
 
     public partial class Role
@@ -364,71 +359,72 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("code")]
-        public string code { get; set; }
+        public string? code { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("name")]
-        public string name { get; set; }
+        public string? name { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("description")]
-        public string description { get; set; }
+        public string? description { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("requirements")]
-        public string requirements { get; set; }
+        public string? requirements { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("area_ids")]
-        public List<long> area_ids { get; set; }
+        public List<long>? area_ids { get; set; }
 
         [JsonPropertyName("role_family")]
-        public object role_family { get; set; }
+        public object? role_family { get; set; }
     }
 
     public partial class DataCustomAttributes
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("idColaborador")]
-        
-        public long? idColaborador { get; set; }
+        public string? idColaborador { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("numInt")]
-        public object numInt { get; set; }
+        public long? numInt { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("numExt")]
-        public object numExt { get; set; }
+        public string? numExt { get; set; }
 
         [JsonPropertyName("Alergias")]
-        public object Alergias { get; set; }
+        public object? Alergias { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("Beneficiario1")]
-        public string Beneficiario1 { get; set; }
+        public string? Beneficiario1 { get; set; }
 
         [JsonPropertyName("Beneficiario2")]
-        public object Beneficiario2 { get; set; }
+        public object? Beneficiario2 { get; set; }
 
         [JsonPropertyName("Beneficiario3")]
-        public object Beneficiario3 { get; set; }
+        public object? Beneficiario3 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("Colonia")]
-        public string Colonia { get; set; }
+        public string? Colonia { get; set; }
 
         [JsonPropertyName("contactoEmergencia1")]
-        public object contactoEmergencia1 { get; set; }
+        public object? contactoEmergencia1 { get; set; }
 
         [JsonPropertyName("contactoEmergencia2")]
-        public object contactoEmergencia2 { get; set; }
+        public object? contactoEmergencia2 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("Delegacion")]
-        public string Delegacion { get; set; }
+        public string? Delegacion { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("EstadoCivil")]
-        public string EstadoCivil { get; set; }
+        public string? EstadoCivil { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("Ext")]
@@ -439,58 +435,58 @@ namespace apiBukLitoprocess.ResponseApi
         public DateTimeOffset? fecNacBeneficiario1 { get; set; }
 
         [JsonPropertyName("fecNacBeneficiario2")]
-        public object fecNacBeneficiario2 { get; set; }
+        public object? fecNacBeneficiario2 { get; set; }
 
         [JsonPropertyName("fecNacBeneficiario3")]
-        public object fecNacBeneficiario3 { get; set; }
+        public object? fecNacBeneficiario3 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("NivelAcademico")]
-        public string NivelAcademico { get; set; }
+        public string? NivelAcademico { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("Pais")]
-        public string Pais { get; set; }
+        public string? Pais { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("parentescoBeneficiario1")]
-        public string parentescoBeneficiario1 { get; set; }
+        public string? parentescoBeneficiario1 { get; set; }
 
         [JsonPropertyName("parentescoBeneficiario2")]
-        public object parentescoBeneficiario2 { get; set; }
+        public object? parentescoBeneficiario2 { get; set; }
 
         [JsonPropertyName("parentescoBeneficiario3")]
-        public object parentescoBeneficiario3 { get; set; }
+        public object? parentescoBeneficiario3 { get; set; }
 
         [JsonPropertyName("parentestoContactoEmerg1")]
-        public object parentestoContactoEmerg1 { get; set; }
+        public object? parentestoContactoEmerg1 { get; set; }
 
         [JsonPropertyName("parentestoContactoEmerg2")]
-        public object parentestoContactoEmerg2 { get; set; }
+        public object? parentestoContactoEmerg2 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("porcBeneficiario1")]
         public long? porcBeneficiario1 { get; set; }
 
         [JsonPropertyName("porcBeneficiario2")]
-        public object porcBeneficiario2 { get; set; }
+        public object? porcBeneficiario2 { get; set; }
 
         [JsonPropertyName("porcBeneficiario3")]
-        public object porcBeneficiario3 { get; set; }
+        public object? porcBeneficiario3 { get; set; }
 
         [JsonPropertyName("telContactoEmerg1")]
-        public object telContactoEmerg1 { get; set; }
+        public object? telContactoEmerg1 { get; set; }
 
         [JsonPropertyName("telContactoEmerg2")]
-        public object telContactoEmerg2 { get; set; }
+        public object? telContactoEmerg2 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("TipoColaborador")]
-        public string TipoColaborador { get; set; }
+        public string? TipoColaborador { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("tipoSangre")]
-        public string tipoSangre { get; set; }
+        public string? tipoSangre { get; set; }
     }
 
     public partial class FamilyResponsability
@@ -501,7 +497,7 @@ namespace apiBukLitoprocess.ResponseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("family_allowance_section")]
-        public string family_allowance_section { get; set; }
+        public string? family_allowance_section { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("simple_family_responsability")]
@@ -520,10 +516,10 @@ namespace apiBukLitoprocess.ResponseApi
         public DateTimeOffset? start_date { get; set; }
 
         [JsonPropertyName("end_date")]
-        public object end_date { get; set; }
+        public object? end_date { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("responsability_details")]
-        public List<object> responsability_details { get; set; }
+        public List<object>? responsability_details { get; set; }
     }
 }

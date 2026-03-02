@@ -1,29 +1,37 @@
+using apiBukLitoprocess.conf;
+using Microsoft.Extensions.Options;
+
 namespace apiBukLitoprocess.Clases;
 
 public class RestClientService
 {
      private readonly HttpClient _httpClient;
+     private readonly ApiSettings _settings;
 
-     private readonly string URL_SERVICE = "https://litoprocess.buk.mx/api/v1/mexico";
-     private readonly string AUTH_TOKEN = "yourAPI";
+     private  string URL_SERVICE = String.Empty;
+     
 
-    public RestClientService(HttpClient httpClient)
+    public RestClientService(IOptions<ApiSettings> options,HttpClient httpClient)
     {
         _httpClient = httpClient;
-        
-        _httpClient.DefaultRequestHeaders.Add("auth_token", AUTH_TOKEN);
+        _settings = options.Value;
+        _httpClient.DefaultRequestHeaders.Add("auth_token", _settings.Token);
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+        URL_SERVICE = _settings.Url_API;
     }
-
     
-
     public async Task<T?> GetAsync<T>(string url)
     {
     var request = new HttpRequestMessage(HttpMethod.Get,URL_SERVICE + url);
-    var response = await _httpClient.SendAsync(request);
-    // var json = await response.Content.ReadAsStringAsync();
-    // Console.WriteLine(json);
-    return await response.Content.ReadFromJsonAsync<T>();
+    // try
+    //     {
+       var response = await _httpClient.SendAsync(request);
+       return await response.Content.ReadFromJsonAsync<T>();
+        // } catch(System.Text.Json.JsonException ex)
+        // {
+        //     Console.WriteLine($"Error deserializing JSON response: {ex.Message}");
+        //     return default;
+        // }
     }
 
     
