@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using apiBukLitoprocess.Clases;
 using apiBukLitoprocess.DTOs;
+using apiBukLitoprocess.mappers;
 using apiBukLitoprocess.repository.interfaces;
 using apiBukLitoprocess.responseApi;
 
@@ -49,16 +50,14 @@ public class ColaboradorService
         {
             return colaboradores;
         }
-        colaboradores.AddRange(firstPageResponse.data.Select(MapToColaboradorDTO));
+        colaboradores.AddRange(firstPageResponse.data.Select(colaborador=>colaborador.ToColaboradorDTO()));
         int totalPages = firstPageResponse.pagination?.total_pages ?? 1;
         if (totalPages <= 1)
         {
 
             return colaboradores;
         }
-        var pageTasks = Enumerable
-            .Range(2, totalPages - 1)
-            .Select(page => _restClient.GetAsync<ResponseListColaborador>($"/employees?page={page}"));
+        var pageTasks = Enumerable.Range(2, totalPages - 1).Select(page => _restClient.GetAsync<ResponseListColaborador>($"/employees?page={page}"));
         var pageResponses = await Task.WhenAll(pageTasks);
         foreach (var pageResponse in pageResponses)
         {
@@ -66,18 +65,15 @@ public class ColaboradorService
             {
                 continue;
             }
-            colaboradores.AddRange(pageResponse.data.Select(MapToColaboradorDTO));
+            colaboradores.AddRange(pageResponse.data.Select(colaborador=>colaborador.ToColaboradorDTO()));
         }
-
         colaboradores.ForEach(async colaborador => await _colaboradorRepository.Actualizar(colaborador.id!.Value, colaborador.IdColaborador));
-
         return colaboradores;
     }
 
 
     private async Task<GetColaboradorResult> GetColaboradorById(int idEmployee)
     {
-
         try
         {
             var response = await _restClient.GetAsync<ResponseColaborador>($"/employees/{idEmployee}");
@@ -85,7 +81,7 @@ public class ColaboradorService
             {
                 return GetColaboradorResult.Fail("Colaborador no encontrado", 404);
             }
-            return GetColaboradorResult.Ok(MapToColaboradorDTO(response.data));
+            return GetColaboradorResult.Ok(response.data.ToColaboradorDTO());
         }
         catch (JsonException ex)
         {
@@ -102,29 +98,5 @@ public class ColaboradorService
         }
     }
 
-    private ColaboradorDTO MapToColaboradorDTO(BodyResponseColaborador colaborador)
-    {
-        return new ColaboradorDTO
-        {
-            id = colaborador.id,
-            Nombre = colaborador.first_name!,
-            ApellidoPaterno = colaborador.surname!,
-            ApellidoMaterno = colaborador.second_surname!,
-            IdColaborador = colaborador.custom_attributes?.idColaborador?.Trim() ?? "**",
-            CURP = colaborador.curp ?? "Sin curp",
-            RFC = colaborador.rfc ?? "Sin rfc",
-            Correo = colaborador.personal_email ?? "Sin correo",
-            NSS = colaborador.social_security ?? "Sin NSS",
-            Direccion = colaborador.address ?? "Sin dirección",
-            CodigoPostal = colaborador.postal_code ?? "55555",
-            Colonia = colaborador.custom_attributes?.Colonia ?? "Sin colonia",
-            Delegacion = colaborador.custom_attributes?.Delegacion ?? "Sin delegación",
-            Poblacion = colaborador.custom_attributes?.Delegacion ?? "Sin población",
-            Telefono = colaborador.phone ?? "Sin teléfono",
-            FechaNacimiento = colaborador.birthday?.ToString("yyyy-dd-MM") ?? "1990-01-01",
-            EstadoCivil = colaborador.civil_status ?? "Soltero",
-
-        };
-    }
 
 }
