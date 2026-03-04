@@ -7,7 +7,7 @@ namespace apiBukLitoprocess.responseApi;
 
 public class ResponseListColaborador
 { 
-    public Pagination? pagination { get; set; }  = null ;             
+    public required Pagination pagination { get; set; }              
     public IEnumerable<BodyResponseColaborador> data { get; set; } = new List<BodyResponseColaborador>();
 }
 
@@ -19,6 +19,6 @@ public class Pagination{
 
     public int count { get; set; } =0;
 
-    public int? total_pages { get; set; }
+    public int total_pages { get; set; } =0;
     
 }

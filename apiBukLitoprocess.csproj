@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.21" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
@@ -18,6 +19,8 @@
     <Folder Include="conf/" />
     <Folder Include="helpers/" />
     <Folder Include="payloads/" />
+    <Folder Include="repository/implementation/" />
+    <Folder Include="repository/interfaces/" />
     <Folder Include="responseApi/" />
   </ItemGroup>
 

@@ -1,11 +1,7 @@
 
-using System.Reflection;
-using System.Runtime.Intrinsics.X86;
-using System.Formats.Tar;
 using apiBukLitoprocess.Clases;
-using apiBukLitoprocess.responseApi;
-
 using Microsoft.AspNetCore.Mvc;
+using apiBukLitoprocess.Services;
 
 namespace apiBukLitoprocess.Controllers;
 
@@ -13,44 +9,38 @@ namespace apiBukLitoprocess.Controllers;
 [Route("api/colaborador")]
 public class ColaboradorController : ControllerBase
 {
-   
-    private readonly RestClientService _restClient;
-    public ColaboradorController(RestClientService restClient)
-    {
-        _restClient = restClient;
-    }
+    private readonly ColaboradorService _colaboradorService;
+    public ColaboradorController(ColaboradorService colaboradorService)=> _colaboradorService = colaboradorService;
+    
 
     [HttpPost("webhook")]
     public async Task<IActionResult> webhook(WebhookPayload payload)
-    {
-        try
-        {
-            int id_colaborador = payload.Data.EmployeeId;
-            var result = await _restClient.GetAsync<ResponseColaborador>($"/employees/{id_colaborador}");                        
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.GetBaseException().Message);
-        }
-        var response = new { message = "Webhook received successfully", payload };
-        return Ok(response);
+    {        
+            var result = await _colaboradorService.handleEventWebhook(payload.Data.EmploymentStatus, payload.Data.EmployeeId);
+            if (result.IsError)
+            {
+                return StatusCode(result.StatusCode, result.ErrorMessage);
+            }
+            return Ok(new { message = "Evento procesado correctamente",
+                            colaborador = result.colaborador,
+                            evento=payload.Data.EventType 
+                            });                                           
     }
 
     [HttpGet("sync")]
-    public async Task<IActionResult> Sync()
+    public async Task<IActionResult> sync()
     {
         try
         {
-            var response = await _restClient.GetAsync<ResponseListColaborador>("/employees");
-            Console.WriteLine(response);
-            return Ok(response);
+            var colaboradores = await _colaboradorService.sincronizar();
+            return Ok(colaboradores);
         }
         catch (Exception e)
         {
             Console.WriteLine(e.GetBaseException().Message);
             return StatusCode(500, "Internal server error");
         }
-     
+             
     }
 
 }

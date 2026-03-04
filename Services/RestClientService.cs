@@ -25,17 +25,14 @@ public class RestClientService
     {
         var request = new HttpRequestMessage(HttpMethod.Get, URL_SERVICE + url);
         var response = await _httpClient.SendAsync(request);
-        //response.EnsureSuccessStatusCode(); // Asegura que la respuesta fue exitosa
-
+        response.EnsureSuccessStatusCode(); // Asegura que la respuesta fue exitos        
         var jsonResponse = await response.Content.ReadAsStringAsync();
         try
         {
             return JsonSerializer.Deserialize<T>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
-        catch (JsonException ex)    
-        {
-            Console.WriteLine($"Error al deserializar JSON: {ex.Message}");
-            //Console.WriteLine($"JSON recibido: {jsonResponse}");
+        catch (JsonException )    
+        {            
             throw; // Vuelve a lanzar la excepción 
         }
     }
@@ -44,7 +41,8 @@ public class RestClientService
     public async Task<TResponse?> PostAsync<TRequest, TResponse>(string url, TRequest data)
     {
         
-        var response = await _httpClient.PostAsJsonAsync( URL_SERVICE + url, data);        
+        var response = await _httpClient.PostAsJsonAsync( URL_SERVICE + url, data);    
+        response.EnsureSuccessStatusCode();         
         return await response.Content.ReadFromJsonAsync<TResponse>();
     }
 
