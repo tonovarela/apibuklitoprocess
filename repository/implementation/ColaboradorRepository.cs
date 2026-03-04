@@ -37,7 +37,8 @@ public class ColaboradorRepository : IColaboradorRepository
                                 Pais=@Pais,
                                 CodigoPostal=@CodigoPostal,
                                 Telefono=@Telefono,
-                                FechaNacimiento=@FechaNacimiento
+                                FechaNacimiento=@FechaNacimiento,
+                                EstadoCivil=@EstadoCivil
                                 where personal=@personal";
             var command = new SqlCommand(query, (SqlConnection)connection);
             command.Parameters.AddWithValue("@Id", colaborador.id);                    
@@ -57,12 +58,13 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@Pais", colaborador.Pais);
             command.Parameters.AddWithValue("@CodigoPostal", colaborador.CodigoPostal);
             command.Parameters.AddWithValue("@Telefono", colaborador.Telefono);
-            command.Parameters.AddWithValue("@FechaNacimiento", colaborador.FechaNacimiento);   
+            command.Parameters.AddWithValue("@FechaNacimiento", colaborador.FechaNacimiento);
+            command.Parameters.AddWithValue("@EstadoCivil", colaborador.EstadoCivil);  
             await command.ExecuteNonQueryAsync();    
         }
     }
 
-    public async  Task Actualizar(long id, string idColaborador)
+    public async Task Actualizar(long id, string idColaborador)
     {
          using var connection = _dbConnectionFactory.CreateConnection();
         {
@@ -76,8 +78,44 @@ public class ColaboradorRepository : IColaboradorRepository
 
    
 
-    public void BuscarPorId(int id)
+    public async Task<ColaboradorDTO?> BuscarPorId(int id)
     {
-        throw new NotImplementedException();
+        using var connection = _dbConnectionFactory.CreateConnection();
+        {
+            var query = "SELECT * FROM dbo.Personal where usuario=@Id";
+            var command = new SqlCommand(query, (SqlConnection)connection);
+            command.Parameters.AddWithValue("@Id", id);                    
+            using var reader = await command.ExecuteReaderAsync();
+            if (reader.Read())
+            {
+                Console.WriteLine($"Colaborador encontrado: {reader["Nombre"]} {reader["ApellidoPaterno"]} {reader["ApellidoMaterno"]}");
+                return new ColaboradorDTO
+                {
+                    id = reader["usuario"] as long?,
+                    Nombre = reader["Nombre"].ToString() ?? "Sin nombre",
+                    ApellidoPaterno = reader["ApellidoPaterno"].ToString() ?? "Sin apellido paterno",
+                    ApellidoMaterno = reader["ApellidoMaterno"].ToString() ?? "Sin apellido materno",
+                    IdColaborador = reader["personal"].ToString() ?? "Sin id colaborador",
+                    CURP = reader["Registro"].ToString() ?? "Sin curp",
+                    RFC = reader["Registro2"].ToString() ?? "Sin rfc",
+                    Correo = reader["email"].ToString() ?? "Sin correo",
+                    NSS = reader["Registro3"].ToString() ?? "Sin NSS",
+                    Direccion = reader["Direccion"].ToString() ?? "Sin dirección",
+                    Colonia = reader["Colonia"].ToString() ?? "Sin colonia",
+                    Delegacion = reader["Delegacion"].ToString() ?? "Sin delegación",
+                    Poblacion = reader["Poblacion"].ToString() ?? "Sin población",
+                    Estado = reader["Estado"].ToString() ?? "Sin estado",
+                    Pais = reader["Pais"].ToString() ?? "Sin país",
+                    CodigoPostal = reader["CodigoPostal"].ToString() ?? "Sin código postal",
+                    Telefono = reader["Telefono"].ToString() ?? "Sin teléfono",
+                    FechaNacimiento = Convert.ToDateTime(reader["FechaNacimiento"]).ToString("yyyy-MM-dd"),
+                    EstadoCivil = reader["EstadoCivil"].ToString() ?? "Sin estado civil"
+                };
+            }            
+             
+                return null;
+        }
     }
+        
+    
 }

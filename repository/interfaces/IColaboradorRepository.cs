@@ -10,7 +10,7 @@ public interface IColaboradorRepository
 
 public Task Actualizar(ColaboradorDTO colaborador);
 
-public void BuscarPorId(int id);
+public  Task<ColaboradorDTO?> BuscarPorId(int id);
 
 public Task  Actualizar(long id, string idColaborador);
 
