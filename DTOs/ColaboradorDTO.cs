@@ -39,7 +39,10 @@ public class ColaboradorDTO
 
      public string Telefono { get; set; } = "Sin teléfono";
 
-      public required string FechaNacimiento { get; set; } 
+     public required string FechaNacimiento { get; set; } 
+
+     public required string EstadoCivil { get; set; }
+
 
 
 }

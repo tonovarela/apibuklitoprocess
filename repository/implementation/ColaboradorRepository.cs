@@ -28,7 +28,7 @@ public class ColaboradorRepository : IColaboradorRepository
                                 Registro=@Curp,
                                 Registro2=@Rfc,
                                 Registro3=@NSS,
-                                Correo=@Correo,                                
+                                email=@Correo,                                
                                 Direccion=@Direccion,
                                 Colonia=@Colonia,
                                 Delegacion=@Delegacion,

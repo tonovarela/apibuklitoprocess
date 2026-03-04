@@ -31,9 +31,11 @@ public class ColaboradorService
         {
             return result;
         }
+        Console.WriteLine(eventType);
 
-        if (eventType == "employee.updated")
+        if (eventType == "employee_update")
         {
+            Console.WriteLine($"Actualizando colaborador {result.colaborador.NombreCompleto} con id {result.colaborador.IdColaborador}");
             await _colaboradorRepository.Actualizar(result.colaborador);
         }
         return result;
@@ -119,8 +121,8 @@ public class ColaboradorService
             Delegacion = colaborador.custom_attributes?.Delegacion ?? "Sin delegación",
             Poblacion = colaborador.custom_attributes?.Delegacion ?? "Sin población",
             Telefono = colaborador.phone ?? "Sin teléfono",
-            FechaNacimiento = colaborador.birthday?.ToString("yyyy-MM-dd") ?? "1990-01-01",
-
+            FechaNacimiento = colaborador.birthday?.ToString("yyyy-dd-MM") ?? "1990-01-01",
+            EstadoCivil = colaborador.civil_status ?? "Soltero",
 
         };
     }
