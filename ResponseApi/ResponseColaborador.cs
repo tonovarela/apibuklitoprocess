@@ -10,10 +10,10 @@ namespace apiBukLitoprocess.responseApi
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("data")]
-        public BodyResponseColaborador? data { get; set; }
+        public ColaboradorResponse? data { get; set; }
     }
 
-    public partial class BodyResponseColaborador
+    public partial class ColaboradorResponse
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("person_id")]
@@ -341,6 +341,7 @@ namespace apiBukLitoprocess.responseApi
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("id")]
+        
         public long? id { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

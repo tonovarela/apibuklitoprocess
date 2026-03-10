@@ -42,15 +42,14 @@ public class ColaboradorRepository : IColaboradorRepository
                                 Telefono=@Telefono,
                                 FechaNacimiento=@FechaNacimiento,
                                 
-
-
                                 NivelAcademico=@NivelAcademico,
                                 Sexo=@Sexo,
                                 EstadoCivil=@EstadoCivil,
                                 Beneficiario = @Beneficiario1,
+
                                 BeneficiarioNacimiento = @BeneficiarioNacimiento1,
-                                ParentescoBeneficiario = @ParentescoBeneficiario1,
-                                PorcentajeBeneficiario = @PorcentajeBeneficiario1,
+                                Parentesco = @ParentescoBeneficiario1,
+                                Porcentaje = @PorcentajeBeneficiario1,
 
                                 Beneficiario2 = @Beneficiario2,
                                 Beneficiario2Nacimiento = @BeneficiarioNacimiento2,                                
@@ -64,8 +63,7 @@ public class ColaboradorRepository : IColaboradorRepository
 
                                 DireccionNumero = @NumExt,
                                 DireccionNumeroInt = @NumInt,
-                                CentroCostos = @CentroCostos
-                                
+                                CentroCostos = @CentroCostos                                
 
                                 where personal=@personal";
             var command = new SqlCommand(query, (SqlConnection)connection);
@@ -90,21 +88,21 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@EstadoCivil", colaborador.EstadoCivil);  
             command.Parameters.AddWithValue("@NivelAcademico", colaborador.NivelAcademico ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Sexo", colaborador.Sexo ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@Beneficiario1", colaborador.Beneficiario1 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@BeneficiarioNacimiento1", colaborador.BeneficiarioNacimiento1 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@ParentescoBeneficiario1", colaborador.ParentescoBeneficiario1 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@PorcentajeBeneficiario1", colaborador.PorcentajeBeneficiario1 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@Beneficiario2", colaborador.Beneficiario2 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@BeneficiarioNacimiento2", colaborador.BeneficiarioNacimiento2 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@ParentescoBeneficiario2", colaborador.ParentescoBeneficiario2 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@PorcentajeBeneficiario2", colaborador.PorcentajeBeneficiario2 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@Beneficiario3", colaborador.Beneficiario3 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@BeneficiarioNacimiento3", colaborador.BeneficiarioNacimiento3 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@ParentescoBeneficiario3", colaborador.ParentescoBeneficiario3 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@PorcentajeBeneficiario3", colaborador.PorcentajeBeneficiario3 ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@NumExt", colaborador.NumExt ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@NumInt", colaborador.NumInt ?? (object)DBNull.Value);
-            // command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Beneficiario1", colaborador.Beneficiario1 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@BeneficiarioNacimiento1", colaborador.FechaNacimientoBeneficiario1 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@ParentescoBeneficiario1", colaborador.ParentescoBeneficiario1 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@PorcentajeBeneficiario1", colaborador.PorcentajeBeneficiario1 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Beneficiario2", colaborador.Beneficiario2 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@BeneficiarioNacimiento2", colaborador.FechaNacimientoBeneficiario2 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@ParentescoBeneficiario2", colaborador.ParentescoBeneficiario2 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@PorcentajeBeneficiario2", colaborador.PorcentajeBeneficiario2 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Beneficiario3", colaborador.Beneficiario3 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@BeneficiarioNacimiento3", colaborador.FechaNacimientoBeneficiario3 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@ParentescoBeneficiario3", colaborador.ParentescoBeneficiario3 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@PorcentajeBeneficiario3", colaborador.PorcentajeBeneficiario3 ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@NumExt", colaborador.NumExt ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@NumInt", colaborador.NumInt ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
 
 
             await command.ExecuteNonQueryAsync();    

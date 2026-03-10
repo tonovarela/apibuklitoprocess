@@ -8,7 +8,7 @@ namespace apiBukLitoprocess.responseApi;
 public class ResponseListColaborador
 { 
     public required Pagination pagination { get; set; }              
-    public IEnumerable<BodyResponseColaborador> data { get; set; } = new List<BodyResponseColaborador>();
+    public IEnumerable<ColaboradorResponse> data { get; set; } = new List<ColaboradorResponse>();
 }
 
 public class Pagination{ 

@@ -27,17 +27,23 @@ public class ColaboradorService
     public async Task<GetColaboradorResult> handleEventWebhook(string eventType, int idEmployee)
     {
 
-        var result = await GetColaboradorById(idEmployee);
+        GetColaboradorResult result = await GetColaboradorById(idEmployee);
         if (result.IsError || result.colaborador == null)
         {
             return result;
         }
-        Console.WriteLine(eventType);
+        ColaboradorDTO colaborador = result.colaborador;
+       //Se obtiene el jefe
+        var resultBoss = await GetColaboradorById(colaborador.BossId ?? 0 );                
+        if (!resultBoss.IsError && resultBoss.colaborador != null)
+        {             
+            result.colaborador.ReportaA = resultBoss.colaborador.IdColaborador;
+        }
+        
 
         if (eventType == "employee_update")
-        {
-            
-            //await _colaboradorRepository.Actualizar(result.colaborador);
+        {            
+            await _colaboradorRepository.Actualizar(result.colaborador);
         }
         return result;
     }
@@ -67,12 +73,12 @@ public class ColaboradorService
             }
             colaboradores.AddRange(pageResponse.data.Select(colaborador=>colaborador.ToColaboradorDTO()));
         }
-        colaboradores.ForEach(async colaborador => await _colaboradorRepository.Actualizar(colaborador.id!.Value, colaborador.IdColaborador));
+        //colaboradores.ForEach(async colaborador => await _colaboradorRepository.Actualizar(colaborador.id!.Value, colaborador.IdColaborador));
         return colaboradores;
     }
 
 
-    private async Task<GetColaboradorResult> GetColaboradorById(int idEmployee)
+    private async Task<GetColaboradorResult> GetColaboradorById(long idEmployee)
     {
         try
         {
@@ -81,6 +87,7 @@ public class ColaboradorService
             {
                 return GetColaboradorResult.Fail("Colaborador no encontrado", 404);
             }
+            
             return GetColaboradorResult.Ok(response.data.ToColaboradorDTO());
         }
         catch (JsonException ex)

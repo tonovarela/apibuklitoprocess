@@ -6,7 +6,7 @@ namespace apiBukLitoprocess.mappers;
 
 public static class ColaboradorExtensions
 {
-     public static ColaboradorDTO ToColaboradorDTO(this BodyResponseColaborador colaborador)
+     public static ColaboradorDTO ToColaboradorDTO(this ColaboradorResponse colaborador)
     {        
          return new ColaboradorDTO
         {
@@ -26,14 +26,14 @@ public static class ColaboradorExtensions
             FechaNacimiento = colaborador.birthday?.ToString("yyyy-dd-MM") ?? "1990-01-01",
             
             Sexo = colaborador.gender == "M" ? "Masculino" : "Femenino",
-            Ext  =colaborador.custom_attributes.Ext ?? String.Empty,            
+            Ext  =colaborador.custom_attributes?.Ext ?? String.Empty,            
 
             IdColaborador = colaborador.custom_attributes?.idColaborador?.Trim() ?? "**",
             TipoColaborador = colaborador.custom_attributes?.tipoColaborador ?? String.Empty,
             Alergias = colaborador.custom_attributes?.Alergias ?? String.Empty,
             NumInt = colaborador.custom_attributes?.numInt ?? String.Empty,
             NumExt = colaborador.custom_attributes?.numExt ?? String.Empty,
-            CentroCostos = colaborador.current_job.cost_center ?? String.Empty,
+            CentroCostos = colaborador.current_job?.cost_center ?? String.Empty,
 
             // Datos de contacto de emergencia
             Beneficiario1 = colaborador.custom_attributes?.Beneficiario1 ?? String.Empty,
@@ -61,12 +61,15 @@ public static class ColaboradorExtensions
             TelContactoEmerg1 = colaborador.custom_attributes?.telContactoEmerg1 ?? String.Empty,
             TelContactoEmerg2 = colaborador.custom_attributes?.telContactoEmerg2 ?? String.Empty,
             TipoSangre = colaborador.custom_attributes?.tipoSangre ?? String.Empty,             
-            EstadoCivil = colaborador.custom_attributes.EstadoCivil ?? String.Empty,
+            EstadoCivil = colaborador.custom_attributes?.EstadoCivil ?? String.Empty,
             
-            NivelAcademico = colaborador.custom_attributes.NivelAcademico ?? String.Empty,
+            NivelAcademico = colaborador.custom_attributes?.NivelAcademico ?? String.Empty,
             Colonia = colaborador.custom_attributes?.Colonia ?? String.Empty,
             Delegacion = colaborador.custom_attributes?.Delegacion ?? String.Empty,
             Poblacion = colaborador.custom_attributes?.Delegacion ?? String.Empty,
+
+
+            BossId= colaborador.current_job?.boss.id ?? 0
                                                               
 
 
