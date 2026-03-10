@@ -36,8 +36,8 @@ public class ColaboradorService
 
         if (eventType == "employee_update")
         {
-            Console.WriteLine($"Actualizando colaborador {result.colaborador.NombreCompleto} con id {result.colaborador.IdColaborador}");
-            await _colaboradorRepository.Actualizar(result.colaborador);
+            
+            //await _colaboradorRepository.Actualizar(result.colaborador);
         }
         return result;
     }

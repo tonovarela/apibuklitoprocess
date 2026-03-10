@@ -84,7 +84,8 @@ namespace apiBukLitoprocess.responseApi
         public string? civil_status { get; set; }
 
         [JsonPropertyName("office_phone")]
-        public object? office_phone { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? office_phone { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("celular")]
@@ -108,46 +109,58 @@ namespace apiBukLitoprocess.responseApi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("location_id")]
-        public long? location_id { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? location_id { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("postal_code")]
+        [JsonConverter(typeof(StringCustomConverter))]
         public string? postal_code { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("active_since")]
-        public DateTimeOffset? active_since { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? active_since { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("status")]
         public string? status { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("payment_method")]
         public string? payment_method { get; set; }
 
         [JsonPropertyName("bank")]
-        public object? bank { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? bank { get; set; }
 
         [JsonPropertyName("account_number")]
-        public object? account_number { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? account_number { get; set; }
 
         [JsonPropertyName("clabe")]
-        public object? clabe { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? clabe { get; set; }
 
         [JsonPropertyName("client_number")]
-        public object? client_number { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? client_number { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("country_code")]
+        [JsonConverter(typeof(StringCustomConverter))]
         public string? country_code { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("private_role")]
+        
         public bool? private_role { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("health_company")]
+
         public string? health_company { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -401,29 +414,37 @@ namespace apiBukLitoprocess.responseApi
         public string? numExt { get; set; }
 
         [JsonPropertyName("Alergias")]
-        public object? Alergias { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? Alergias { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("Beneficiario1")]
+        [JsonConverter(typeof(StringCustomConverter))]
         public string? Beneficiario1 { get; set; }
 
         [JsonPropertyName("Beneficiario2")]
-        public object? Beneficiario2 { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? Beneficiario2 { get; set; }
 
         [JsonPropertyName("Beneficiario3")]
-        public object? Beneficiario3 { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? Beneficiario3 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("Colonia")]
+        [JsonConverter(typeof(StringCustomConverter))]
         public string? Colonia { get; set; }
 
         [JsonPropertyName("contactoEmergencia1")]
-        public object? contactoEmergencia1 { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? contactoEmergencia1 { get; set; }
 
         [JsonPropertyName("contactoEmergencia2")]
-        public object? contactoEmergencia2 { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? contactoEmergencia2 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("Delegacion")]
         public string? Delegacion { get; set; }
 
@@ -432,64 +453,92 @@ namespace apiBukLitoprocess.responseApi
         public string? EstadoCivil { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("Ext")]
-        public long? Ext { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]        
+        [JsonPropertyName("Ext")]        
+        public string? Ext { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("fecNacBeneficiario1")]
-        public DateTimeOffset? fecNacBeneficiario1 { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? fecNacBeneficiario1 { get; set; }
 
         [JsonPropertyName("fecNacBeneficiario2")]
-        public object? fecNacBeneficiario2 { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? fecNacBeneficiario2 { get; set; }
 
         [JsonPropertyName("fecNacBeneficiario3")]
-        public object? fecNacBeneficiario3 { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? fecNacBeneficiario3 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("NivelAcademico")]
+        [JsonConverter(typeof(StringCustomConverter))]
         public string? NivelAcademico { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("Pais")]
+        [JsonConverter(typeof(StringCustomConverter))]
         public string? Pais { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("parentescoBeneficiario1")]
         public string? parentescoBeneficiario1 { get; set; }
 
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("parentescoBeneficiario2")]
-        public object? parentescoBeneficiario2 { get; set; }
+        public string? parentescoBeneficiario2 { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("parentescoBeneficiario3")]
-        public object? parentescoBeneficiario3 { get; set; }
+        public string? parentescoBeneficiario3 { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("parentestoContactoEmerg1")]
-        public object? parentestoContactoEmerg1 { get; set; }
+        public string? parentestoContactoEmerg1 { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("parentestoContactoEmerg2")]
-        public object? parentestoContactoEmerg2 { get; set; }
+        public string? parentestoContactoEmerg2 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("porcBeneficiario1")]
-        public long? porcBeneficiario1 { get; set; }
+        public string? porcBeneficiario1 { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("porcBeneficiario2")]
-        public object? porcBeneficiario2 { get; set; }
+        public string? porcBeneficiario2 { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("porcBeneficiario3")]
-        public object? porcBeneficiario3 { get; set; }
+        public string? porcBeneficiario3 { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("telContactoEmerg1")]
-        public object? telContactoEmerg1 { get; set; }
+        public string? telContactoEmerg1 { get; set; }
 
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("telContactoEmerg2")]
-        public object? telContactoEmerg2 { get; set; }
+        public string? telContactoEmerg2 { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("TipoColaborador")]
-        public string? TipoColaborador { get; set; }
+        public string? tipoColaborador { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonConverter(typeof(StringCustomConverter))]
         [JsonPropertyName("tipoSangre")]
         public string? tipoSangre { get; set; }
     }

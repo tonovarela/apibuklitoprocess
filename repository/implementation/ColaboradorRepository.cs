@@ -18,7 +18,10 @@ public class ColaboradorRepository : IColaboradorRepository
 
     public async Task Actualizar(ColaboradorDTO colaborador)
     {
-        using var connection = _dbConnectionFactory.CreateConnection();
+     
+        try {
+
+            using var connection = _dbConnectionFactory.CreateConnection();
         {
             var query = @"UPDATE dbo.Personal set 
                                 usuario=@Id,
@@ -38,7 +41,32 @@ public class ColaboradorRepository : IColaboradorRepository
                                 CodigoPostal=@CodigoPostal,
                                 Telefono=@Telefono,
                                 FechaNacimiento=@FechaNacimiento,
-                                EstadoCivil=@EstadoCivil
+                                
+
+
+                                NivelAcademico=@NivelAcademico,
+                                Sexo=@Sexo,
+                                EstadoCivil=@EstadoCivil,
+                                Beneficiario = @Beneficiario1,
+                                BeneficiarioNacimiento = @BeneficiarioNacimiento1,
+                                ParentescoBeneficiario = @ParentescoBeneficiario1,
+                                PorcentajeBeneficiario = @PorcentajeBeneficiario1,
+
+                                Beneficiario2 = @Beneficiario2,
+                                Beneficiario2Nacimiento = @BeneficiarioNacimiento2,                                
+                                Parentesco2 = @ParentescoBeneficiario2,
+                                Porcentaje2 = @PorcentajeBeneficiario2,
+
+                                Beneficiario3 = @Beneficiario3,
+                                Beneficiario3Nacimiento = @BeneficiarioNacimiento3,
+                                Parentesco3 = @ParentescoBeneficiario3,
+                                Porcentaje3 = @PorcentajeBeneficiario3,
+
+                                DireccionNumero = @NumExt,
+                                DireccionNumeroInt = @NumInt,
+                                CentroCostos = @CentroCostos
+                                
+
                                 where personal=@personal";
             var command = new SqlCommand(query, (SqlConnection)connection);
             command.Parameters.AddWithValue("@Id", colaborador.id);                    
@@ -48,7 +76,7 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@personal", colaborador.IdColaborador);
             command.Parameters.AddWithValue("@Curp", colaborador.CURP);
             command.Parameters.AddWithValue("@Rfc", colaborador.RFC);
-            command.Parameters.AddWithValue("@Correo", colaborador.Correo ?? "Sin correo");
+            command.Parameters.AddWithValue("@Correo", colaborador.Correo);
             command.Parameters.AddWithValue("@NSS", colaborador.NSS);
             command.Parameters.AddWithValue("@Direccion", colaborador.Direccion);
             command.Parameters.AddWithValue("@Colonia", colaborador.Colonia);
@@ -60,7 +88,32 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@Telefono", colaborador.Telefono);
             command.Parameters.AddWithValue("@FechaNacimiento", colaborador.FechaNacimiento);
             command.Parameters.AddWithValue("@EstadoCivil", colaborador.EstadoCivil);  
+            command.Parameters.AddWithValue("@NivelAcademico", colaborador.NivelAcademico ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Sexo", colaborador.Sexo ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@Beneficiario1", colaborador.Beneficiario1 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@BeneficiarioNacimiento1", colaborador.BeneficiarioNacimiento1 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@ParentescoBeneficiario1", colaborador.ParentescoBeneficiario1 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@PorcentajeBeneficiario1", colaborador.PorcentajeBeneficiario1 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@Beneficiario2", colaborador.Beneficiario2 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@BeneficiarioNacimiento2", colaborador.BeneficiarioNacimiento2 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@ParentescoBeneficiario2", colaborador.ParentescoBeneficiario2 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@PorcentajeBeneficiario2", colaborador.PorcentajeBeneficiario2 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@Beneficiario3", colaborador.Beneficiario3 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@BeneficiarioNacimiento3", colaborador.BeneficiarioNacimiento3 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@ParentescoBeneficiario3", colaborador.ParentescoBeneficiario3 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@PorcentajeBeneficiario3", colaborador.PorcentajeBeneficiario3 ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@NumExt", colaborador.NumExt ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@NumInt", colaborador.NumInt ?? (object)DBNull.Value);
+            // command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
+
+
             await command.ExecuteNonQueryAsync();    
+
+        } 
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error al actualizar colaborador  con id {colaborador.IdColaborador}: {ex.Message}");        
         }
     }
 
