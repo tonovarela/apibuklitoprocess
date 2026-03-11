@@ -16,13 +16,15 @@ public class ColaboradorController : ControllerBase
     [HttpPost("webhook")]
     public async Task<IActionResult> webhook(WebhookPayload payload)
     {        
-            var result = await _colaboradorService.handleEventWebhook(payload.Data.EventType, payload.Data.EmployeeId);
+            var result = await _colaboradorService.handleEventWebhook(payload.Data);
+            
             if (result.IsError)
             {
+                Console.WriteLine(result.ErrorMessage);
                 return StatusCode(result.StatusCode, result.ErrorMessage);
             }
             return Ok(new { message = "Evento procesado correctamente",
-                            colaborador = result.colaborador,
+                             colaborador = result.colaborador,
                             evento=payload.Data.EventType 
                             });                                           
     }

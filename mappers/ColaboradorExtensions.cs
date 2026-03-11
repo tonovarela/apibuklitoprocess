@@ -11,15 +11,15 @@ public static class ColaboradorExtensions
          return new ColaboradorDTO
         {
             id = colaborador.id,
-            Nombre = colaborador.first_name ?? String.Empty,
-            ApellidoPaterno = colaborador.surname ?? String.Empty,
-            ApellidoMaterno = colaborador.second_surname ?? String.Empty,
+            Nombre = colaborador.first_name ?? string.Empty,
+            ApellidoPaterno = colaborador.surname ?? string.Empty,
+            ApellidoMaterno = colaborador.second_surname ?? string.Empty,
             
-            CURP = colaborador.curp ?? String.Empty,
-            RFC = colaborador.rfc ?? String.Empty,
-            Correo = colaborador.personal_email ?? String.Empty,
-            NSS = colaborador.social_security ?? String.Empty,
-            Direccion = colaborador.address ?? String.Empty,
+            CURP = colaborador.curp ?? string.Empty,
+            RFC = colaborador.rfc ?? string.Empty,
+            Correo = colaborador.personal_email ?? string.Empty,
+            NSS = colaborador.social_security ?? string.Empty,
+            Direccion = colaborador.address ?? string.Empty,
             CodigoPostal = colaborador.postal_code ?? String.Empty,
             
             Telefono = colaborador.phone ?? String.Empty,
@@ -68,8 +68,7 @@ public static class ColaboradorExtensions
             Delegacion = colaborador.custom_attributes?.Delegacion ?? String.Empty,
             Poblacion = colaborador.custom_attributes?.Delegacion ?? String.Empty,
 
-
-            BossId= colaborador.current_job?.boss.id ?? 0
+            BossId= colaborador.current_job?.boss?.id ?? 0
                                                               
 
 

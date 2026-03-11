@@ -24,9 +24,16 @@ public class ColaboradorService
         _colaboradorRepository = colaboradorRepository;
     }
 
-    public async Task<GetColaboradorResult> handleEventWebhook(string eventType, int idEmployee)
-    {
+    
 
+    public async Task<GetColaboradorResult> handleEventWebhook(WebhookPayloadBody bodyPayload)
+    {
+        
+        EventLogger.Info("webhook_event", bodyPayload);
+        
+        string eventType = bodyPayload.EventType;
+        long idEmployee = bodyPayload.EmployeeId;        
+        
         GetColaboradorResult result = await GetColaboradorById(idEmployee);
         if (result.IsError || result.colaborador == null)
         {
@@ -38,12 +45,11 @@ public class ColaboradorService
         if (!resultBoss.IsError && resultBoss.colaborador != null)
         {             
             result.colaborador.ReportaA = resultBoss.colaborador.IdColaborador;
-        }
+        }        
         
-
         if (eventType == "employee_update")
         {            
-            await _colaboradorRepository.Actualizar(result.colaborador);
+            //await _colaboradorRepository.Actualizar(result.colaborador);
         }
         return result;
     }
