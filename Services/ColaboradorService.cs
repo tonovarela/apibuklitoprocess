@@ -49,7 +49,7 @@ public class ColaboradorService
         
         if (eventType == "employee_update")
         {            
-            //await _colaboradorRepository.Actualizar(result.colaborador);
+            await _colaboradorRepository.Actualizar(result.colaborador);
         }
         return result;
     }
@@ -79,7 +79,7 @@ public class ColaboradorService
             }
             colaboradores.AddRange(pageResponse.data.Select(colaborador=>colaborador.ToColaboradorDTO()));
         }
-        //colaboradores.ForEach(async colaborador => await _colaboradorRepository.Actualizar(colaborador.id!.Value, colaborador.IdColaborador));
+        colaboradores.ForEach(async colaborador => await _colaboradorRepository.Actualizar(colaborador.id!.Value, colaborador.IdColaborador));
         return colaboradores;
     }
 
