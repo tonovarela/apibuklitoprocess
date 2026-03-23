@@ -8,6 +8,7 @@ namespace apiBukLitoprocess.repository.implementation;
 
 public class ColaboradorRepository : IColaboradorRepository
 {
+    
     private readonly DbConnectionFactory _dbConnectionFactory;
 
     public ColaboradorRepository(DbConnectionFactory dbConnectionFactory)
@@ -103,8 +104,6 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@NumExt", colaborador.NumExt ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@NumInt", colaborador.NumInt ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
-
-
             await command.ExecuteNonQueryAsync();    
 
         } 
@@ -127,7 +126,8 @@ public class ColaboradorRepository : IColaboradorRepository
         }
     }
 
-   
+    
+
 
     public async Task<ColaboradorDTO?> BuscarPorId(int id)
     {
@@ -167,6 +167,65 @@ public class ColaboradorRepository : IColaboradorRepository
                 return null;
         }
     }
-        
+
+    public async Task InsertarBitacora(string id, string evento)
+    {
+        using var connection = _dbConnectionFactory.CreateConnection();
+        {
+            var query = "INSERT INTO Buk.dbo.BitacoraPersonal (id_colaborador_buk, evento) VALUES (@IdColaborador, @Evento)";
+            var command = new SqlCommand(query, (SqlConnection)connection);
+            command.Parameters.AddWithValue("@IdColaborador", id);
+            command.Parameters.AddWithValue("@Evento", evento);
+            await command.ExecuteNonQueryAsync();
+        }
+    }
+
+
+
+
+
+   public async Task<int> obtenerSiguienteClavePersonal(){
+
+      string sql="SELECT MAX(cast(Personal as int)) + 1 siguiente  from dbo.Personal where Tipo<>'Becario' ";
+       using var connection = _dbConnectionFactory.CreateConnection();
+       {
+           var command = new SqlCommand(sql, (SqlConnection)connection);
+           var result = await command.ExecuteScalarAsync();
+           return Convert.ToInt32(result);
+       }
+
+   }
     
+
+
+    public async Task Insertar(ColaboradorDTO colaborador,int nuevoIdColaborador)
+    {
+        using var connection = _dbConnectionFactory.CreateConnection();
+        {
+            var query = @"INSERT INTO dbo.Personal (Estatus,Usuario, Nombre, ApellidoPaterno, ApellidoMaterno, Registro, Registro2, email, Registro3, Direccion, Colonia, Delegacion, Poblacion, Estado, Pais, CodigoPostal, Telefono, FechaNacimiento, EstadoCivil) 
+            VALUES (@Personal,'ALTA',@Usuario,@Nombre, @ApellidoPaterno, @ApellidoMaterno, @Registro, @Registro2, @Email, @Registro3, @Direccion, @Colonia, @Delegacion, @Poblacion, @Estado, @Pais, @CodigoPostal, @Telefono, @FechaNacimiento, @EstadoCivil); SELECT SCOPE_IDENTITY();";
+            var command = new SqlCommand(query, (SqlConnection)connection);
+            command.Parameters.AddWithValue("@Personal", nuevoIdColaborador);
+            command.Parameters.AddWithValue("@Nombre", colaborador.Nombre);
+            command.Parameters.AddWithValue("@ApellidoPaterno", colaborador.ApellidoPaterno);
+            command.Parameters.AddWithValue("@ApellidoMaterno", colaborador.ApellidoMaterno);            
+            command.Parameters.AddWithValue("@Registro", colaborador.CURP);
+            command.Parameters.AddWithValue("@Registro2", colaborador.RFC);
+            command.Parameters.AddWithValue("@Email", colaborador.Correo);
+            command.Parameters.AddWithValue("@Registro3", colaborador.NSS);
+            command.Parameters.AddWithValue("@Direccion", colaborador.Direccion);
+            command.Parameters.AddWithValue("@Colonia", colaborador.Colonia);
+            command.Parameters.AddWithValue("@Delegacion", colaborador.Delegacion);
+            command.Parameters.AddWithValue("@Poblacion", colaborador.Poblacion);
+            command.Parameters.AddWithValue("@Estado", colaborador.Estado);
+            command.Parameters.AddWithValue("@Pais", colaborador.Pais);
+            command.Parameters.AddWithValue("@CodigoPostal", colaborador.CodigoPostal);
+            command.Parameters.AddWithValue("@Telefono", colaborador.Telefono);
+            command.Parameters.AddWithValue("@FechaNacimiento", colaborador.FechaNacimiento);
+            command.Parameters.AddWithValue("@EstadoCivil", colaborador.EstadoCivil);
+            command.Parameters.AddWithValue("@Usuario", colaborador.id);                                    
+            
+        }
+    }
+
 }

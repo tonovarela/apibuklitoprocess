@@ -45,12 +45,24 @@ public class ColaboradorService
         if (!resultBoss.IsError && resultBoss.colaborador != null)
         {             
             result.colaborador.ReportaA = resultBoss.colaborador.IdColaborador;
-        }        
-        
+        }                
         if (eventType == "employee_update")
         {            
             await _colaboradorRepository.Actualizar(result.colaborador);
         }
+
+
+        if (eventType == "job_hire"){
+            var colaboradorDB =await _colaboradorRepository.BuscarPorId((int)idEmployee);            
+            if (colaboradorDB == null)
+            {
+               int nuevoCodigoPersonal= await _colaboradorRepository.obtenerSiguienteClavePersonal();                              
+               Console.WriteLine($"Nuevo código personal generado: {nuevoCodigoPersonal}");
+               await  _colaboradorRepository.Insertar(result.colaborador,nuevoCodigoPersonal);
+            }            
+        }
+
+        await _colaboradorRepository.InsertarBitacora(idEmployee.ToString(), eventType);
         return result;
     }
 
