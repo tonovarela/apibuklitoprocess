@@ -230,7 +230,9 @@ public class ColaboradorRepository : IColaboradorRepository
                 Telefono,
                 FechaNacimiento,
                 EstadoCivil,
-                reportaA
+                reportaA,
+                CentroCostos,
+                Puesto
             )
             VALUES
             (
@@ -254,7 +256,9 @@ public class ColaboradorRepository : IColaboradorRepository
                 @Telefono,
                 @FechaNacimiento,
                 @EstadoCivil,
-                @ReportaA
+                @ReportaA,
+                @CentroCostos,
+                @Puesto                                
             );";
 
         using var command = new SqlCommand(query, (SqlConnection)connection);
@@ -279,6 +283,9 @@ public class ColaboradorRepository : IColaboradorRepository
         command.Parameters.AddWithValue("@FechaNacimiento", colaborador.FechaNacimiento ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@EstadoCivil", colaborador.EstadoCivil ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@ReportaA", colaborador.ReportaA ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Puesto", colaborador.Puesto ?? (object)DBNull.Value);
+        
 
         await command.ExecuteNonQueryAsync();
     }

@@ -116,6 +116,8 @@ public class ColaboradorDTO
 
 
 
+ public string? Puesto { get; set; }
+
 
 
     

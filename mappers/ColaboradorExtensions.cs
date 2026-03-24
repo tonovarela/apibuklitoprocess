@@ -68,7 +68,8 @@ public static class ColaboradorExtensions
             Delegacion = colaborador.custom_attributes?.Delegacion ?? String.Empty,
             Poblacion = colaborador.custom_attributes?.Delegacion ?? String.Empty,
 
-            BossId= colaborador.current_job?.boss?.id ?? 0
+            BossId= colaborador.current_job?.boss?.id ?? 0,
+            Puesto = colaborador.current_job?.role?.name ?? String.Empty
                                                               
 
 
