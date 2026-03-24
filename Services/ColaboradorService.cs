@@ -33,14 +33,14 @@ public class ColaboradorService
         EventLogger.Info("webhook_event", bodyPayload);
 
         string eventType = bodyPayload.EventType;
-        long idEmployee = bodyPayload.EmployeeId;
+        long idEmployeeBuk = bodyPayload.EmployeeId;
 
         if (string.IsNullOrWhiteSpace(eventType))
         {
             return GetColaboradorResult.Fail("Evento inválido", 400);
         }
 
-        GetColaboradorResult result = await getColaboradorById(idEmployee);
+        GetColaboradorResult result = await getColaboradorById(idEmployeeBuk);
         if (result.IsError || result.colaborador is null)
         {
             return result;
@@ -56,19 +56,18 @@ public class ColaboradorService
                     break;
 
                 case "job_hire":
-                    var colaboradorDB = await _colaboradorRepository.BuscarPorId((int)idEmployee);
+                    var colaboradorDB = await _colaboradorRepository.BuscarPorId((int)idEmployeeBuk);
                     if (colaboradorDB is not null)
                     {
                         return GetColaboradorResult.Fail("Colaborador ya existe en la base de datos", 409);
 
                     }
                     await registrarSiNoExisteAsync(colaborador);                    
-                    await _restClient.PatchAsync($"/employees/{idEmployee}", new { custom_attributes = new { idColaborador = colaborador.IdColaborador } });                    
+                    await _restClient.PatchAsync($"/employees/{idEmployeeBuk}", new { custom_attributes = new { idColaborador = colaborador.IdColaborador } });                    
 
                     break;
             }
-
-            await _colaboradorRepository.InsertarBitacora(idEmployee.ToString(), eventType);
+            await _colaboradorRepository.InsertarBitacora(idEmployeeBuk.ToString(), eventType);
             return GetColaboradorResult.Ok(colaborador);
         }
         catch (Exception ex)
@@ -113,11 +112,11 @@ public class ColaboradorService
     }
 
 
-    private async Task<GetColaboradorResult> getColaboradorById(long idEmployee)
+    private async Task<GetColaboradorResult> getColaboradorById(long idEmployeeBuk)
     {
         try
         {
-            var response = await _restClient.GetAsync<ResponseColaborador>($"/employees/{idEmployee}");
+            var response = await _restClient.GetAsync<ResponseColaborador>($"/employees/{idEmployeeBuk}");
             if (response?.data == null)
             {
                 return GetColaboradorResult.Fail("Colaborador no encontrado", 404);
