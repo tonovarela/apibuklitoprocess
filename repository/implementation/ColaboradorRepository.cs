@@ -64,7 +64,8 @@ public class ColaboradorRepository : IColaboradorRepository
 
                                 DireccionNumero = @NumExt,
                                 DireccionNumeroInt = @NumInt,
-                                CentroCostos = @CentroCostos                                
+                                CentroCostos = @CentroCostos,
+                                Puesto = @Puesto                                
 
                                 where personal=@personal";
             var command = new SqlCommand(query, (SqlConnection)connection);
@@ -104,6 +105,7 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@NumExt", colaborador.NumExt ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@NumInt", colaborador.NumInt ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Puesto", colaborador.Puesto ?? (object)DBNull.Value);
             await command.ExecuteNonQueryAsync();    
 
         } 

@@ -51,11 +51,12 @@ public class ColaboradorService
         {
             switch (eventType)
             {
-                case "employee_update":
+                case "employee_update" or "job_movement":
                     await _colaboradorRepository.Actualizar(colaborador);
                     break;
 
-                case "job_hire":
+                case "job_hire":  
+                //TODO: Pendiente el saber como colocar el departamento y puesto en el colaborador, ya que la API de Buk no los trae de forma directa, se tendría que obtener a través de otro endpoint o mapearlo de alguna forma con la información que se tiene del colaborador
                     var colaboradorDB = await _colaboradorRepository.BuscarPorId((int)idEmployeeBuk);
                     if (colaboradorDB is not null)
                     {
@@ -65,7 +66,7 @@ public class ColaboradorService
                     await registrarSiNoExisteAsync(colaborador);                    
                     await _restClient.PatchAsync($"/employees/{idEmployeeBuk}", new { custom_attributes = new { idColaborador = colaborador.IdColaborador } });                    
 
-                    break;
+                    break;                 
             }
             await _colaboradorRepository.InsertarBitacora(idEmployeeBuk.ToString(), eventType);
             return GetColaboradorResult.Ok(colaborador);
