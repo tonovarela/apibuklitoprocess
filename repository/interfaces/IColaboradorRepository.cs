@@ -18,6 +18,6 @@ public Task Insertar(ColaboradorDTO colaborador,int nuevoIdColaborador);
 
 public Task InsertarBitacora(string id, string accion);
 
-public  Task<int> obtenerSiguienteClavePersonal();
+public  Task<int> ObtenerSiguienteClavePersonal();
 
 }

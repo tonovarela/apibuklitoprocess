@@ -46,4 +46,15 @@ public class RestClientService
         return await response.Content.ReadFromJsonAsync<TResponse>();
     }
 
+
+    public async Task PatchAsync<TRequest>(string url, TRequest data)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Patch, URL_SERVICE + url)
+        {
+            Content = JsonContent.Create(data)
+        };
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+    }
+
 }

@@ -10,23 +10,29 @@ namespace apiBukLitoprocess.Controllers;
 public class ColaboradorController : ControllerBase
 {
     private readonly ColaboradorService _colaboradorService;
-    public ColaboradorController(ColaboradorService colaboradorService)=> _colaboradorService = colaboradorService;
-    
+    public ColaboradorController(ColaboradorService colaboradorService) => _colaboradorService = colaboradorService;
+
 
     [HttpPost("webhook")]
     public async Task<IActionResult> webhook(WebhookPayload payload)
-    {        
-            var result = await _colaboradorService.handleEventWebhook(payload.Data);
-            
-            if (result.IsError)
+    {
+        var result = await _colaboradorService.handleEventWebhook(payload.Data);
+        if (result.IsError)
+        {
+            return StatusCode(result.StatusCode, new
             {
-                Console.WriteLine(result.ErrorMessage);
-                return StatusCode(result.StatusCode, result.ErrorMessage);
-            }
-            return Ok(new { message = "Evento procesado correctamente",
-                             colaborador = result.colaborador,
-                            evento=payload.Data.EventType 
-                            });                                           
+                success = false,
+                statusCode = result.StatusCode,
+                message = result.ErrorMessage
+            });
+        }
+
+        return Ok(new
+        {
+            success = true,
+            statusCode = 200,
+            data = result.colaborador
+        });
     }
 
     [HttpGet("sync")]
@@ -35,14 +41,24 @@ public class ColaboradorController : ControllerBase
         try
         {
             var colaboradores = await _colaboradorService.sincronizar();
-            return Ok(colaboradores);
+            return Ok(new
+            {
+                success = true,
+                statusCode = 200,
+                data = colaboradores
+            });
         }
         catch (Exception e)
         {
             Console.WriteLine(e.GetBaseException().Message);
-            return StatusCode(500, "Internal server error");
+            return StatusCode(500, new
+            {
+                success = false,
+                statusCode = 500,
+                message = "Internal server error"
+            });
         }
-             
+
     }
 
 }

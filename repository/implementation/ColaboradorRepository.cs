@@ -138,8 +138,7 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@Id", id);                    
             using var reader = await command.ExecuteReaderAsync();
             if (reader.Read())
-            {
-                Console.WriteLine($"Colaborador encontrado: {reader["Nombre"]} {reader["ApellidoPaterno"]} {reader["ApellidoMaterno"]}");
+            {                
                 return new ColaboradorDTO
                 {
                     id = reader["usuario"] as long?,
@@ -184,9 +183,13 @@ public class ColaboradorRepository : IColaboradorRepository
 
 
 
-   public async Task<int> obtenerSiguienteClavePersonal(){
+   public async Task<int> ObtenerSiguienteClavePersonal(){
 
-      string sql="SELECT MAX(cast(Personal as int)) + 1 siguiente  from dbo.Personal where Tipo<>'Becario' ";
+      string sql=@"SELECT 
+                   MAX(cast(Personal as int)) + 1 siguiente  
+                   FROM dbo.Personal 
+                   WHERE Tipo<>'Becario' 
+                   AND cast(Personal as int) < 9000";
        using var connection = _dbConnectionFactory.CreateConnection();
        {
            var command = new SqlCommand(sql, (SqlConnection)connection);
@@ -200,32 +203,91 @@ public class ColaboradorRepository : IColaboradorRepository
 
     public async Task Insertar(ColaboradorDTO colaborador,int nuevoIdColaborador)
     {
+       try
+    {
         using var connection = _dbConnectionFactory.CreateConnection();
-        {
-            var query = @"INSERT INTO dbo.Personal (Estatus,Usuario, Nombre, ApellidoPaterno, ApellidoMaterno, Registro, Registro2, email, Registro3, Direccion, Colonia, Delegacion, Poblacion, Estado, Pais, CodigoPostal, Telefono, FechaNacimiento, EstadoCivil) 
-            VALUES (@Personal,'ALTA',@Usuario,@Nombre, @ApellidoPaterno, @ApellidoMaterno, @Registro, @Registro2, @Email, @Registro3, @Direccion, @Colonia, @Delegacion, @Poblacion, @Estado, @Pais, @CodigoPostal, @Telefono, @FechaNacimiento, @EstadoCivil); SELECT SCOPE_IDENTITY();";
-            var command = new SqlCommand(query, (SqlConnection)connection);
-            command.Parameters.AddWithValue("@Personal", nuevoIdColaborador);
-            command.Parameters.AddWithValue("@Nombre", colaborador.Nombre);
-            command.Parameters.AddWithValue("@ApellidoPaterno", colaborador.ApellidoPaterno);
-            command.Parameters.AddWithValue("@ApellidoMaterno", colaborador.ApellidoMaterno);            
-            command.Parameters.AddWithValue("@Registro", colaborador.CURP);
-            command.Parameters.AddWithValue("@Registro2", colaborador.RFC);
-            command.Parameters.AddWithValue("@Email", colaborador.Correo);
-            command.Parameters.AddWithValue("@Registro3", colaborador.NSS);
-            command.Parameters.AddWithValue("@Direccion", colaborador.Direccion);
-            command.Parameters.AddWithValue("@Colonia", colaborador.Colonia);
-            command.Parameters.AddWithValue("@Delegacion", colaborador.Delegacion);
-            command.Parameters.AddWithValue("@Poblacion", colaborador.Poblacion);
-            command.Parameters.AddWithValue("@Estado", colaborador.Estado);
-            command.Parameters.AddWithValue("@Pais", colaborador.Pais);
-            command.Parameters.AddWithValue("@CodigoPostal", colaborador.CodigoPostal);
-            command.Parameters.AddWithValue("@Telefono", colaborador.Telefono);
-            command.Parameters.AddWithValue("@FechaNacimiento", colaborador.FechaNacimiento);
-            command.Parameters.AddWithValue("@EstadoCivil", colaborador.EstadoCivil);
-            command.Parameters.AddWithValue("@Usuario", colaborador.id);                                    
-            
-        }
+
+        var query = @"
+            INSERT INTO dbo.Personal
+            (
+                Personal,
+                Estatus,
+                Usuario,
+                Nombre,
+                ApellidoPaterno,
+                ApellidoMaterno,
+                Registro,
+                Registro2,
+                email,
+                Registro3,
+                Direccion,
+                Colonia,
+                Delegacion,
+                Poblacion,
+                Estado,
+                Pais,
+                CodigoPostal,
+                Telefono,
+                FechaNacimiento,
+                EstadoCivil,
+                reportaA
+            )
+            VALUES
+            (
+                @Personal,
+                'ALTA',
+                @Usuario,
+                @Nombre,
+                @ApellidoPaterno,
+                @ApellidoMaterno,
+                @Registro,
+                @Registro2,
+                @Email,
+                @Registro3,
+                @Direccion,
+                @Colonia,
+                @Delegacion,
+                @Poblacion,
+                @Estado,
+                @Pais,
+                @CodigoPostal,
+                @Telefono,
+                @FechaNacimiento,
+                @EstadoCivil,
+                @ReportaA
+            );";
+
+        using var command = new SqlCommand(query, (SqlConnection)connection);
+
+        command.Parameters.AddWithValue("@Personal", nuevoIdColaborador);
+        command.Parameters.AddWithValue("@Usuario", colaborador.id ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Nombre", colaborador.Nombre ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@ApellidoPaterno", colaborador.ApellidoPaterno ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@ApellidoMaterno", colaborador.ApellidoMaterno ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Registro", colaborador.CURP ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Registro2", colaborador.RFC ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Email", colaborador.Correo ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Registro3", colaborador.NSS ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Direccion", colaborador.Direccion ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Colonia", colaborador.Colonia ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Delegacion", colaborador.Delegacion ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Poblacion", colaborador.Poblacion ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Estado", colaborador.Estado ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Pais", colaborador.Pais ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@CodigoPostal", colaborador.CodigoPostal ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Telefono", colaborador.Telefono ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@FechaNacimiento", colaborador.FechaNacimiento ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@EstadoCivil", colaborador.EstadoCivil ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@ReportaA", colaborador.ReportaA ?? (object)DBNull.Value);
+
+        await command.ExecuteNonQueryAsync();
+    }
+    catch (SqlException ex)
+    {
+        Console.WriteLine($"Error SQL al registrar colaborador {nuevoIdColaborador}: {ex.Message}");
+        throw;
+    }
+        
     }
 
 }
