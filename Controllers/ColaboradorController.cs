@@ -40,7 +40,7 @@ public class ColaboradorController : ControllerBase
     {
         try
         {
-            var colaboradores = await _colaboradorService.sincronizar();
+            var colaboradores = await _colaboradorService.Sincronizar();
             return Ok(new
             {
                 success = true,

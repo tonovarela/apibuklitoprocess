@@ -16,7 +16,7 @@ public Task  Actualizar(long id, string idColaborador);
 
 public Task Insertar(ColaboradorDTO colaborador,int nuevoIdColaborador);
 
-public Task InsertarBitacora(string id, string accion);
+public Task InsertarBitacora(BitacoraDTO bitacora);
 
 public  Task<int> ObtenerSiguienteClavePersonal();
 

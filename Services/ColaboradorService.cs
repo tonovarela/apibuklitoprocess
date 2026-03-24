@@ -1,4 +1,4 @@
-using System;
+
 using System.Net;
 using System.Text.Json;
 using apiBukLitoprocess.Clases;
@@ -7,7 +7,11 @@ using apiBukLitoprocess.mappers;
 using apiBukLitoprocess.repository.interfaces;
 using apiBukLitoprocess.responseApi;
 
+
 namespace apiBukLitoprocess.Services;
+
+
+
 
 public record GetColaboradorResult(bool IsError, int StatusCode, string? ErrorMessage, ColaboradorDTO? colaborador)
 {
@@ -19,6 +23,15 @@ public class ColaboradorService
 {
     private readonly RestClientService _restClient;
     private readonly IColaboradorRepository _colaboradorRepository;
+
+
+    private readonly HashSet<string> EventosValidos = new(StringComparer.OrdinalIgnoreCase){
+    "employee_update",
+    "job_hire",
+    "job_movement"
+   };
+
+
     public ColaboradorService(RestClientService restClient, IColaboradorRepository colaboradorRepository)
     {
         _restClient = restClient;
@@ -29,24 +42,30 @@ public class ColaboradorService
 
     public async Task<GetColaboradorResult> handleEventWebhook(WebhookPayloadBody bodyPayload)
     {
-
-        EventLogger.Info("webhook_event", bodyPayload);
-
         string eventType = bodyPayload.EventType;
-        long idEmployeeBuk = bodyPayload.EmployeeId;
+        int idEmployeeBuk = bodyPayload.EmployeeId;
+
+        EventLogger.Info("webhook_event", bodyPayload);    
 
         if (string.IsNullOrWhiteSpace(eventType))
-        {
+        {                        
             return GetColaboradorResult.Fail("Evento inválido", 400);
         }
+                    
+        if (!EventosValidos.Contains(eventType))
+        {
+            await RegistrarBitacoraAsync(BitacoraDTO.NoSoportado(idEmployeeBuk, eventType));
+            return GetColaboradorResult.Fail("Evento no soportado", 400);
+        }
 
-        GetColaboradorResult result = await getColaboradorByIdBuk(idEmployeeBuk);
+        GetColaboradorResult result = await GetColaboradorByIdBuk(idEmployeeBuk);        
         if (result.IsError || result.colaborador is null)
         {
+            await RegistrarBitacoraAsync(BitacoraDTO.Error(idEmployeeBuk, eventType, $"No se pudo obtener el colaborador de Buk: {result.ErrorMessage}"));
             return result;
         }
-        var colaborador = result.colaborador;
-        await asignarJefeAsync(colaborador);
+        ColaboradorDTO colaborador = result.colaborador;
+        await AsignarJefeAsync(colaborador);
         try
         {
             switch (eventType)
@@ -55,31 +74,27 @@ public class ColaboradorService
                     await _colaboradorRepository.Actualizar(colaborador);
                     break;
 
-                case "job_hire":  
-                //TODO: Pendiente el saber como colocar el departamento y puesto en el colaborador, ya que la API de Buk no los trae de forma directa, se tendría que obtener a través de otro endpoint o mapearlo de alguna forma con la información que se tiene del colaborador
-                    var colaboradorDB = await _colaboradorRepository.BuscarPorId((int)idEmployeeBuk);
-                    if (colaboradorDB is not null)
-                    {
-                        return GetColaboradorResult.Fail("Colaborador ya existe en la base de datos", 409);
-
-                    }
-                    await registrarSiNoExisteAsync(colaborador);                    
-                    await _restClient.PatchAsync($"/employees/{idEmployeeBuk}", new { custom_attributes = new { idColaborador = colaborador.IdColaborador } });                    
-
-                    break;                 
+                case "job_hire":
+                    //TODO: Pendiente el saber como colocar el departamento y puesto en el colaborador, ya que la API de Buk no los trae de forma directa, se tendría que obtener a través de otro endpoint o mapearlo de alguna forma con la información que se tiene del colaborador
+                    await ProcesarJobHireAsync(idEmployeeBuk, colaborador);
+                    break;
             }
-            await _colaboradorRepository.InsertarBitacora(idEmployeeBuk.ToString(), eventType);
+            await RegistrarBitacoraAsync(BitacoraDTO.Exito(idEmployeeBuk, eventType));
             return GetColaboradorResult.Ok(colaborador);
+        }
+        catch (InvalidOperationException ex)
+        {
+            await RegistrarBitacoraAsync(BitacoraDTO.Omitido(idEmployeeBuk, eventType, $"{ex.Message}"));
+            return GetColaboradorResult.Fail(ex.Message, 409);
         }
         catch (Exception ex)
         {
+            await RegistrarBitacoraAsync(BitacoraDTO.Error(idEmployeeBuk, eventType, $"Error al procesar evento: {ex.GetBaseException().Message}"));
             return GetColaboradorResult.Fail($"Error al procesar evento {eventType}: {ex.Message}", 500);
         }
-
     }
 
-
-    public async Task<List<ColaboradorDTO>> sincronizar()
+    public async Task<List<ColaboradorDTO>> Sincronizar()
     {
         var colaboradores = new List<ColaboradorDTO>();
         var firstPageResponse = await _restClient.GetAsync<ResponseListColaborador>("/employees");
@@ -113,7 +128,22 @@ public class ColaboradorService
     }
 
 
-    private async Task<GetColaboradorResult> getColaboradorByIdBuk(long idEmployeeBuk)
+    #region Métodos privados
+
+    private async Task ProcesarJobHireAsync(long idEmployeeBuk, ColaboradorDTO colaborador)
+    {
+        var colaboradorDB = await _colaboradorRepository.BuscarPorId((int)idEmployeeBuk);
+        if (colaboradorDB is not null)
+            throw new InvalidOperationException("Colaborador ya existe en la base de datos");
+
+        await RegistrarSiNoExisteAsync(colaborador);
+        await _restClient.PatchAsync($"/employees/{idEmployeeBuk}", new
+        {
+            custom_attributes = new { idColaborador = colaborador.IdColaborador }
+        });
+    }
+
+    private async Task<GetColaboradorResult> GetColaboradorByIdBuk(long idEmployeeBuk)
     {
         try
         {
@@ -140,21 +170,21 @@ public class ColaboradorService
     }
 
 
-    private async Task asignarJefeAsync(ColaboradorDTO colaborador)
+    private async Task AsignarJefeAsync(ColaboradorDTO colaborador)
     {
         if (!colaborador.BossId.HasValue || colaborador.BossId.Value <= 0)
         {
             return;
         }
 
-        var resultBoss = await getColaboradorByIdBuk(colaborador.BossId.Value);
+        var resultBoss = await GetColaboradorByIdBuk(colaborador.BossId.Value);
         if (!resultBoss.IsError && resultBoss.colaborador is not null)
         {
             colaborador.ReportaA = resultBoss.colaborador.IdColaborador;
         }
     }
 
-    private async Task registrarSiNoExisteAsync(ColaboradorDTO colaborador)
+    private async Task RegistrarSiNoExisteAsync(ColaboradorDTO colaborador)
     {
 
         var nuevoCodigoPersonal = await _colaboradorRepository.ObtenerSiguienteClavePersonal();
@@ -162,5 +192,19 @@ public class ColaboradorService
         await _colaboradorRepository.Insertar(colaborador, nuevoCodigoPersonal);
     }
 
+
+
+    private async Task RegistrarBitacoraAsync(BitacoraDTO bitacora)
+    {
+        try
+        {
+            await _colaboradorRepository.InsertarBitacora(bitacora);
+        }
+        catch (Exception ex)
+        {
+            EventLogger.Error("Error al registrar bitácora", ex, new { bitacora, error = ex.GetBaseException().Message });
+        }
+    }
+    #endregion
 
 }

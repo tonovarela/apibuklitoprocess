@@ -169,14 +169,16 @@ public class ColaboradorRepository : IColaboradorRepository
         }
     }
 
-    public async Task InsertarBitacora(string id, string evento)
+    public async Task InsertarBitacora(BitacoraDTO bitacoraDTO)
     {
         using var connection = _dbConnectionFactory.CreateConnection();
         {
-            var query = "INSERT INTO Buk.dbo.BitacoraPersonal (id_colaborador_buk, evento) VALUES (@IdColaborador, @Evento)";
+            var query = "INSERT INTO Buk.dbo.BitacoraPersonal (id_colaborador_buk, evento,estado,detalle) VALUES (@IdColaborador, @Evento, @Estado, @Detalle)";
             var command = new SqlCommand(query, (SqlConnection)connection);
-            command.Parameters.AddWithValue("@IdColaborador", id);
-            command.Parameters.AddWithValue("@Evento", evento);
+            command.Parameters.AddWithValue("@IdColaborador", bitacoraDTO.IdEmpleado);
+            command.Parameters.AddWithValue("@Evento", bitacoraDTO.Evento);
+            command.Parameters.AddWithValue("@Estado", bitacoraDTO.Estado ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Detalle", bitacoraDTO.Detalle ?? (object)DBNull.Value);            
             await command.ExecuteNonQueryAsync();
         }
     }
