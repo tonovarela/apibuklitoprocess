@@ -40,7 +40,7 @@ public class ColaboradorService
             return GetColaboradorResult.Fail("Evento inválido", 400);
         }
 
-        GetColaboradorResult result = await getColaboradorById(idEmployeeBuk);
+        GetColaboradorResult result = await getColaboradorByIdBuk(idEmployeeBuk);
         if (result.IsError || result.colaborador is null)
         {
             return result;
@@ -113,7 +113,7 @@ public class ColaboradorService
     }
 
 
-    private async Task<GetColaboradorResult> getColaboradorById(long idEmployeeBuk)
+    private async Task<GetColaboradorResult> getColaboradorByIdBuk(long idEmployeeBuk)
     {
         try
         {
@@ -147,7 +147,7 @@ public class ColaboradorService
             return;
         }
 
-        var resultBoss = await getColaboradorById(colaborador.BossId.Value);
+        var resultBoss = await getColaboradorByIdBuk(colaborador.BossId.Value);
         if (!resultBoss.IsError && resultBoss.colaborador is not null)
         {
             colaborador.ReportaA = resultBoss.colaborador.IdColaborador;
