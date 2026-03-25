@@ -17,6 +17,6 @@ public class WebhookPayloadBody
         public int EmployeeId { get; set; }
 
         [JsonPropertyName("employment_status")]
-        public required string EmploymentStatus { get; set; }
+        public string? EmploymentStatus { get; set; }
 
 }

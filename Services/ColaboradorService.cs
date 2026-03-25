@@ -25,7 +25,11 @@ public class ColaboradorService
     private readonly IColaboradorRepository _colaboradorRepository;
 
 
-    private readonly HashSet<string> EventosValidos = new(StringComparer.OrdinalIgnoreCase){"employee_update","job_hire","job_movement"};
+    private readonly HashSet<string> EventosValidos = new(StringComparer.OrdinalIgnoreCase){
+        "employee_update",
+        "job_hire",
+        "job_movement"
+        };
 
 
     public ColaboradorService(RestClientService restClient, IColaboradorRepository colaboradorRepository)
