@@ -15,8 +15,7 @@ public class ColaboradorController : ControllerBase
 
     [HttpPost("webhook")]
     public async Task<IActionResult> webhook(WebhookPayload payload)
-    {
-        
+    {        
         var result = await _colaboradorService.handleEventWebhook(payload.Data);        
         if (result.IsError)
         {
@@ -27,7 +26,6 @@ public class ColaboradorController : ControllerBase
                 message = result.ErrorMessage
             });
         }
-
         return Ok(new
         {
             success = true,
