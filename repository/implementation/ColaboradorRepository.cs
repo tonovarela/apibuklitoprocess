@@ -129,8 +129,6 @@ public class ColaboradorRepository : IColaboradorRepository
     }
 
     
-
-
     public async Task<ColaboradorDTO?> BuscarPorId(int id)
     {
         using var connection = _dbConnectionFactory.CreateConnection();
@@ -184,9 +182,6 @@ public class ColaboradorRepository : IColaboradorRepository
     }
 
 
-
-
-
    public async Task<int> ObtenerSiguienteClavePersonal(){
 
       string sql=@"SELECT 
@@ -236,10 +231,12 @@ public class ColaboradorRepository : IColaboradorRepository
                 EstadoCivil,
                 reportaA,
                 CentroCostos,
-                Puesto
+                Puesto,
+                Tipo
+                
             )
             VALUES
-            (
+            (                
                 @Personal,
                 'ALTA',
                 @Usuario,
@@ -262,7 +259,8 @@ public class ColaboradorRepository : IColaboradorRepository
                 @EstadoCivil,
                 @ReportaA,
                 @CentroCostos,
-                @Puesto                                
+                @Puesto,
+                'Empleado'                                
             );";
 
         using var command = new SqlCommand(query, (SqlConnection)connection);
