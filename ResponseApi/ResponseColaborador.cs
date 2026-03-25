@@ -193,10 +193,11 @@ namespace apiBukLitoprocess.responseApi
         public DataCustomAttributes? custom_attributes { get; set; }
 
         [JsonPropertyName("active_until")]
-        public object? active_until { get; set; }
+        [JsonConverter(typeof(StringCustomConverter))]
+        public string? active_until { get; set; }
 
         [JsonPropertyName("termination_reason")]
-        public object? termination_reason { get; set; }
+        public string? termination_reason { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("current_job")]

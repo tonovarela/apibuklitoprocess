@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Globalization;
 
 namespace apiBukLitoprocess.helpers;
 
@@ -18,8 +19,14 @@ public class StringCustomConverter:JsonConverter<string?>
         if (reader.TokenType == JsonTokenType.String)
         {
             string? value = reader.GetString();
+            if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dt) ||
+                DateTime.TryParse(value, CultureInfo.CurrentCulture, DateTimeStyles.RoundtripKind, out dt))
+            {
+                return dt.ToString("yyyy-dd-MM", CultureInfo.InvariantCulture);
+            }
             return value;
         }
+        
         if (reader.TokenType == JsonTokenType.Null)
         {
             return null;

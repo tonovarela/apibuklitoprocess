@@ -28,6 +28,7 @@ public class ColaboradorService
     private readonly HashSet<string> EventosValidos = new(StringComparer.OrdinalIgnoreCase){
         "employee_update",
         "job_hire",
+        "job_termination",        
         "job_movement"
         };
 
@@ -78,6 +79,13 @@ public class ColaboradorService
                 case "job_hire":
                     //TODO: Pendiente el saber como colocar el departamento y puesto en el colaborador, ya que la API de Buk no los trae de forma directa, se tendría que obtener a través de otro endpoint o mapearlo de alguna forma con la información que se tiene del colaborador
                     await ProcesarJobHireAsync(idEmployeeBuk, colaborador);
+                    break;
+
+                case "job_termination":
+                    
+                    await _colaboradorRepository.RegistrarBaja(idEmployeeBuk.ToString(),
+                                                               colaborador.ConceptoBaja,
+                                                               colaborador.FechaBaja);
                     break;
             }
             await RegistrarBitacoraAsync(BitacoraDTO.Exito(idEmployeeBuk, eventType));

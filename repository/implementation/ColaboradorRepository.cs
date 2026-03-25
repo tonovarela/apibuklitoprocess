@@ -197,6 +197,27 @@ public class ColaboradorRepository : IColaboradorRepository
        }
 
    }
+
+   public async Task RegistrarBaja(string idPersonalBuk, string conceptoBaja,string fechaBaja){
+        
+        try {
+            using var connection = _dbConnectionFactory.CreateConnection();
+            string sql =$@"
+                            UPDATE dbo.Personal SET Estatus='BAJA',
+                                                   FechaBaja=@FechaBaja,
+                                                   ConceptoBaja=@ConceptoBaja 
+                                                   WHERE Usuario=@idPersonalBuk
+                                                   ";
+            using var command = new SqlCommand(sql, (SqlConnection)connection);
+            command.Parameters.AddWithValue("@idPersonalBuk", idPersonalBuk);
+            command.Parameters.AddWithValue("@ConceptoBaja", conceptoBaja);
+            command.Parameters.AddWithValue("@FechaBaja", fechaBaja);
+            await command.ExecuteNonQueryAsync();
+        }catch(Exception ex){
+            Console.WriteLine($"Error SQL al registrar colaborador {idPersonalBuk}: {ex.Message}");
+        throw;
+        }  
+   }
     
 
 
@@ -232,7 +253,8 @@ public class ColaboradorRepository : IColaboradorRepository
                 reportaA,
                 CentroCostos,
                 Puesto,
-                Tipo
+                Tipo,
+                FechaAlta
                 
             )
             VALUES
@@ -260,7 +282,8 @@ public class ColaboradorRepository : IColaboradorRepository
                 @ReportaA,
                 @CentroCostos,
                 @Puesto,
-                'Empleado'                                
+                'Empleado',
+                @FechaAlta
             );";
 
         using var command = new SqlCommand(query, (SqlConnection)connection);
@@ -287,7 +310,7 @@ public class ColaboradorRepository : IColaboradorRepository
         command.Parameters.AddWithValue("@ReportaA", colaborador.ReportaA ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@Puesto", colaborador.Puesto ?? (object)DBNull.Value);
-        
+        command.Parameters.AddWithValue("@FechaAlta", colaborador.FechaAlta ?? (object)DBNull.Value);
 
         await command.ExecuteNonQueryAsync();
     }
@@ -298,5 +321,7 @@ public class ColaboradorRepository : IColaboradorRepository
     }
         
     }
+
+    
 
 }

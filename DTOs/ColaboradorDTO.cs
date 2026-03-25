@@ -9,33 +9,26 @@ public class ColaboradorDTO
     public required string Nombre { get; set; }
     public required string ApellidoPaterno { get; set; }
     public required string ApellidoMaterno { get; set; }
+    
+    public required string IdColaborador  { get; set; }
 
-    // public  string NombreCompleto { 
-    //     get
-    //     {
-    //         return $"{Nombre} {ApellidoPaterno} {ApellidoMaterno}";
-    //     }
-    // }
+    public required string CURP { get; set; }
 
-     public required string IdColaborador  { get; set; }
+    public required string RFC { get; set; }
 
-     public required string CURP { get; set; }
+    public  string? Correo { get; set; }
 
-     public required string RFC { get; set; }
+    public string? NivelAcademico { get; set; }
 
-     public  string? Correo { get; set; }
+    public string? Ext { get; set; } 
 
-     public string? NivelAcademico { get; set; }
+    public string NSS { get; set; } = "Sin NSS";
 
-     public string? Ext { get; set; } 
+    public string Direccion { get; set; } = "Sin dirección";
 
-     public string NSS { get; set; } = "Sin NSS";
+    public string? Sexo { get; set; }
 
-     public string Direccion { get; set; } = "Sin dirección";
-
-     public string? Sexo { get; set; }
-
-     public string Colonia { get; set; } = "Sin colonia";
+    public string Colonia { get; set; } = "Sin colonia";
 
      public string Delegacion { get; set; } = "Sin delegación";
 
@@ -117,6 +110,15 @@ public class ColaboradorDTO
 
 
  public string? Puesto { get; set; }
+
+ public string? FechaBaja { get; set; }
+
+ public string? FechaAlta { get; set; }
+
+ public string? ConceptoBaja { get; set; }
+
+
+
 
 
 
