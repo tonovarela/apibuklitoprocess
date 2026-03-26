@@ -329,10 +329,11 @@ public class ColaboradorRepository : IColaboradorRepository
 
     public async Task<string> ObtenerEquivalenciaArea(long idAreaBuk)
     {
-        string sql="select descripcionIntelisis from dbo.Departamentos where id=@idAreaBuk";
+        string sql="select descripcionIntelisis from Buk.dbo.Departamentos where id=@idAreaBuk";
          using var connection = _dbConnectionFactory.CreateConnection();
        {
            var command = new SqlCommand(sql, (SqlConnection)connection);
+              command.Parameters.AddWithValue("@idAreaBuk", idAreaBuk);
            var result = await command.ExecuteScalarAsync();
            return result?.ToString() ?? "";
        }
