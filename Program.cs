@@ -14,9 +14,12 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient<RestClientService>();
 builder.Services.AddSingleton<DbConnectionFactory>();
 builder.Services.AddScoped<ColaboradorService>();
+
 builder.Services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
 
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
+builder.Services.AddHostedService<OutBoxWorker>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
