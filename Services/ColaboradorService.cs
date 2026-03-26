@@ -83,9 +83,7 @@ public class ColaboradorService
 
                 case "job_termination":
                     
-                    await _colaboradorRepository.RegistrarBaja(idEmployeeBuk.ToString(),
-                                                               colaborador.ConceptoBaja,
-                                                               colaborador.FechaBaja);
+                    await _colaboradorRepository.RegistrarBaja(idEmployeeBuk.ToString(),colaborador.ConceptoBaja!,colaborador.FechaBaja!);
                     break;
             }
             await RegistrarBitacoraAsync(BitacoraDTO.Exito(idEmployeeBuk, eventType));
@@ -146,6 +144,12 @@ public class ColaboradorService
             throw new InvalidOperationException("Colaborador ya existe en la base de datos");
 
         await RegistrarSiNoExisteAsync(colaborador);
+
+        
+
+
+
+
         await _restClient.PatchAsync($"/employees/{idEmployeeBuk}", new
         {
             custom_attributes = new { idColaborador = colaborador.IdColaborador }
@@ -161,7 +165,12 @@ public class ColaboradorService
             {
                 return GetColaboradorResult.Fail("Colaborador no encontrado", 404);
             }
-            return GetColaboradorResult.Ok(response.data.ToColaboradorDTO());
+                    
+            ColaboradorDTO colaborador = response.data.ToColaboradorDTO();            
+            long areaBuk = response.data.current_job?.area_id ?? 0;
+            string departamento = await _colaboradorRepository.ObtenerEquivalenciaArea(areaBuk);
+            colaborador.Departamento = departamento;                
+            return GetColaboradorResult.Ok(colaborador);
         }
         catch (JsonException ex)
         {

@@ -22,4 +22,7 @@ public Task<int> ObtenerSiguienteClavePersonal();
 
 public Task RegistrarBaja(string idPersonalBuk, string conceptoBaja,string fechaBaja);
 
+
+public Task<String> ObtenerEquivalenciaArea(long idAreaBuk);  
+
 }

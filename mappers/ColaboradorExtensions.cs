@@ -74,8 +74,8 @@ public static class ColaboradorExtensions
             ConceptoBaja =colaborador.termination_reason ??String.Empty,
 
             FechaAlta = colaborador.active_since ,
-
-            FechaBaja = colaborador.active_until
+            FechaBaja = colaborador.active_until,
+            
 
 
         };

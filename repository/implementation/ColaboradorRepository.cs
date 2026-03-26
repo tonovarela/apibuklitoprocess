@@ -65,7 +65,8 @@ public class ColaboradorRepository : IColaboradorRepository
                                 DireccionNumero = @NumExt,
                                 DireccionNumeroInt = @NumInt,
                                 CentroCostos = @CentroCostos,
-                                Puesto = @Puesto                                
+                                Puesto = @Puesto,
+                                Departamento = @Departamento                                
 
                                 where personal=@personal";
             var command = new SqlCommand(query, (SqlConnection)connection);
@@ -106,6 +107,7 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@NumInt", colaborador.NumInt ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Puesto", colaborador.Puesto ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Departamento", colaborador.Departamento ?? (object)DBNull.Value);
             await command.ExecuteNonQueryAsync();    
 
         } 
@@ -254,7 +256,8 @@ public class ColaboradorRepository : IColaboradorRepository
                 CentroCostos,
                 Puesto,
                 Tipo,
-                FechaAlta
+                FechaAlta,
+                Departamento
                 
             )
             VALUES
@@ -283,7 +286,8 @@ public class ColaboradorRepository : IColaboradorRepository
                 @CentroCostos,
                 @Puesto,
                 'Empleado',
-                @FechaAlta
+                @FechaAlta,
+                @Departamento
             );";
 
         using var command = new SqlCommand(query, (SqlConnection)connection);
@@ -311,6 +315,7 @@ public class ColaboradorRepository : IColaboradorRepository
         command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@Puesto", colaborador.Puesto ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@FechaAlta", colaborador.FechaAlta ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Departamento", colaborador.Departamento ?? (object)DBNull.Value);
 
         await command.ExecuteNonQueryAsync();
     }
@@ -322,6 +327,16 @@ public class ColaboradorRepository : IColaboradorRepository
         
     }
 
-    
+    public async Task<string> ObtenerEquivalenciaArea(long idAreaBuk)
+    {
+        string sql="select descripcionIntelisis from dbo.Departamentos where id=@idAreaBuk";
+         using var connection = _dbConnectionFactory.CreateConnection();
+       {
+           var command = new SqlCommand(sql, (SqlConnection)connection);
+           var result = await command.ExecuteScalarAsync();
+           return result?.ToString() ?? "";
+       }
 
+        
+    }
 }

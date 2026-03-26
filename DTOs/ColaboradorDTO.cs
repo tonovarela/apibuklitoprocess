@@ -61,12 +61,15 @@ public class ColaboradorDTO
 
     public string?  CentroCostos { get; set; }
 
-    //Pendiente de definir si se requiere o no este campo, ya que no se encuentra en la respuesta de la API de Buk, pero es un dato que podría ser relevante para el área de recursos humanos
+    
      public string? ReportaA { get; set; }
+
+     public string? Departamento { get; set; }
 
 
 
     public long? BossId { get; set; }
+
 
     
 
