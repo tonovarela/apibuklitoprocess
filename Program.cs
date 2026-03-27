@@ -17,8 +17,7 @@ builder.Services.AddScoped<ColaboradorService>();
 
 builder.Services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
 
-//builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
-builder.Services.AddHttpClient("BukApi", (sp, client) =>
+builder.Services.AddHttpClient(ApiClientNames.Buk, (sp, client) =>
 {
     var settings = builder.Configuration.GetSection("BukApiSettings").Get<ApiSettings>()!;
     client.BaseAddress = new Uri(settings.Url_API);
@@ -26,7 +25,7 @@ builder.Services.AddHttpClient("BukApi", (sp, client) =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
-builder.Services.AddHttpClient("AsistenciaApi", (sp, client) =>
+builder.Services.AddHttpClient(ApiClientNames.Asistencia, (sp, client) =>
 {
     var settings = builder.Configuration.GetSection("AsistenciaApiSettings").Get<ApiSettings>()!;
     client.BaseAddress = new Uri(settings.Url_API);

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text.Json;
 using apiBukLitoprocess.Clases;
+using apiBukLitoprocess.conf;
 using apiBukLitoprocess.DTOs;
 using apiBukLitoprocess.mappers;
 using apiBukLitoprocess.repository.interfaces;
@@ -104,7 +105,7 @@ public class ColaboradorService
     public async Task<List<ColaboradorDTO>> Sincronizar()
     {
         var colaboradores = new List<ColaboradorDTO>();
-        var firstPageResponse = await _restClient.GetAsync<ResponseListColaborador>("BukApi","/employees");
+        var firstPageResponse = await _restClient.GetAsync<ResponseListColaborador>(ApiClientNames.Buk,"/employees");
         if (firstPageResponse?.data == null)
         {
             return colaboradores;
@@ -116,7 +117,7 @@ public class ColaboradorService
 
             return colaboradores;
         }
-        var pageTasks = Enumerable.Range(2, totalPages - 1).Select(page => _restClient.GetAsync<ResponseListColaborador>("BukApi",$"/employees?page={page}"));
+        var pageTasks = Enumerable.Range(2, totalPages - 1).Select(page => _restClient.GetAsync<ResponseListColaborador>(ApiClientNames.Buk,$"/employees?page={page}"));
         var pageResponses = await Task.WhenAll(pageTasks);
         foreach (var pageResponse in pageResponses)
         {
@@ -150,7 +151,7 @@ public class ColaboradorService
 
 
 
-        await _restClient.PatchAsync("BukApi",$"/employees/{idEmployeeBuk}", new
+        await _restClient.PatchAsync(ApiClientNames.Buk,$"/employees/{idEmployeeBuk}", new
         {
             custom_attributes = new { idColaborador = colaborador.IdColaborador }
         });
@@ -160,7 +161,7 @@ public class ColaboradorService
     {
         try
         {
-            var response = await _restClient.GetAsync<ResponseColaborador>("BukApi",$"/employees/{idEmployeeBuk}");
+            var response = await _restClient.GetAsync<ResponseColaborador>(ApiClientNames.Buk,$"/employees/{idEmployeeBuk}");
             if (response?.data == null)
             {
                 return GetColaboradorResult.Fail("Colaborador no encontrado", 404);
