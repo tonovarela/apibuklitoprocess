@@ -17,9 +17,27 @@ builder.Services.AddScoped<ColaboradorService>();
 
 builder.Services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
 
-builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+//builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.AddHttpClient("BukApi", (sp, client) =>
+{
+    var settings = builder.Configuration.GetSection("BukApiSettings").Get<ApiSettings>()!;
+    client.BaseAddress = new Uri(settings.Url_API);
+    client.DefaultRequestHeaders.Add("auth_token", settings.Token);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
 
-builder.Services.AddHostedService<OutBoxWorker>();
+builder.Services.AddHttpClient("AsistenciaApi", (sp, client) =>
+{
+    var settings = builder.Configuration.GetSection("AsistenciaApiSettings").Get<ApiSettings>()!;
+    client.BaseAddress = new Uri(settings.Url_API);
+    client.DefaultRequestHeaders.Add("token", settings.Token);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
+// Registrar RestClientService que usa IHttpClientFactory
+builder.Services.AddScoped<RestClientService>();
+
+//builder.Services.AddHostedService<OutBoxWorker>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())

@@ -104,7 +104,7 @@ public class ColaboradorService
     public async Task<List<ColaboradorDTO>> Sincronizar()
     {
         var colaboradores = new List<ColaboradorDTO>();
-        var firstPageResponse = await _restClient.GetAsync<ResponseListColaborador>("/employees");
+        var firstPageResponse = await _restClient.GetAsync<ResponseListColaborador>("BukApi","/employees");
         if (firstPageResponse?.data == null)
         {
             return colaboradores;
@@ -116,7 +116,7 @@ public class ColaboradorService
 
             return colaboradores;
         }
-        var pageTasks = Enumerable.Range(2, totalPages - 1).Select(page => _restClient.GetAsync<ResponseListColaborador>($"/employees?page={page}"));
+        var pageTasks = Enumerable.Range(2, totalPages - 1).Select(page => _restClient.GetAsync<ResponseListColaborador>("BukApi",$"/employees?page={page}"));
         var pageResponses = await Task.WhenAll(pageTasks);
         foreach (var pageResponse in pageResponses)
         {
@@ -150,7 +150,7 @@ public class ColaboradorService
 
 
 
-        await _restClient.PatchAsync($"/employees/{idEmployeeBuk}", new
+        await _restClient.PatchAsync("BukApi",$"/employees/{idEmployeeBuk}", new
         {
             custom_attributes = new { idColaborador = colaborador.IdColaborador }
         });
@@ -160,7 +160,7 @@ public class ColaboradorService
     {
         try
         {
-            var response = await _restClient.GetAsync<ResponseColaborador>($"/employees/{idEmployeeBuk}");
+            var response = await _restClient.GetAsync<ResponseColaborador>("BukApi",$"/employees/{idEmployeeBuk}");
             if (response?.data == null)
             {
                 return GetColaboradorResult.Fail("Colaborador no encontrado", 404);

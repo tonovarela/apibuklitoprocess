@@ -1,4 +1,4 @@
--- Outbox + Trigger for dbo.personal
+
 
 -- 1) Create outbox table
 CREATE TABLE dbo.PersonalAuditOutbox (
