@@ -16,6 +16,7 @@ builder.Services.AddSingleton<DbConnectionFactory>();
 builder.Services.AddScoped<ColaboradorService>();
 
 builder.Services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
+builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
 
 builder.Services.AddHttpClient(ApiClientNames.Buk, (sp, client) =>
 {
