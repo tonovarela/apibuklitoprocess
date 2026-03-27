@@ -11,7 +11,7 @@ public class ResponseListColaborador
     public IEnumerable<ColaboradorResponse> data { get; set; } = new List<ColaboradorResponse>();
 }
 
-public class Pagination{ 
+public partial class Pagination{ 
 
     public string? next { get; set; }
 

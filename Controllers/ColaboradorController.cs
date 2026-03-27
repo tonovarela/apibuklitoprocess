@@ -10,8 +10,12 @@ namespace apiBukLitoprocess.Controllers;
 public class ColaboradorController : ControllerBase
 {
     private readonly ColaboradorService _colaboradorService;
-    public ColaboradorController(ColaboradorService colaboradorService) => _colaboradorService = colaboradorService;
-
+    private readonly AsistenciaService _asistenciaService;
+    public ColaboradorController(ColaboradorService colaboradorService, AsistenciaService asistenciaService)
+    {
+        _colaboradorService = colaboradorService;
+        _asistenciaService = asistenciaService;
+    }
 
     [HttpPost("webhook")]
     public async Task<IActionResult> webhook(WebhookPayload payload)
@@ -66,24 +70,14 @@ public class ColaboradorController : ControllerBase
     public async Task<IActionResult> GetChecadas()
     {
         try
-        {
-            var checadas = "checadas recientes"; //await _colaboradorService.ObtenerChecadasRecientes();
-            //await _colaboradorService.ObtenerChecadasRecientes();
-            return Ok(new
-            {
-                success = true,
-                statusCode = 200,
-                data = checadas
-            });
+        {           
+            var checadas = await _asistenciaService.RegistroAsistencias(DateOnly.FromDateTime(DateTime.Now.AddDays(-30)));            
+            return Ok(new{success = true,statusCode = 200,data = checadas});
         }
         catch (Exception e)
         {
             Console.WriteLine(e.GetBaseException().Message);
-            return StatusCode(500, new
-            {
-                success = false,
-                statusCode = 500,
-                message = "Internal server error"
+            return StatusCode(500, new{success = false,statusCode = 500,message = "Internal server error"
             });
         }
     }

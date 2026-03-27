@@ -14,6 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient<RestClientService>();
 builder.Services.AddSingleton<DbConnectionFactory>();
 builder.Services.AddScoped<ColaboradorService>();
+builder.Services.AddScoped<AsistenciaService>();
 
 builder.Services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
 builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
