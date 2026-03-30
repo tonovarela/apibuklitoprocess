@@ -20,6 +20,7 @@ public class ColaboradorController : ControllerBase
     [HttpPost("webhook")]
     public async Task<IActionResult> webhook(WebhookPayload payload)
     {        
+        Console.WriteLine($"Received webhook event:for Employee ID: {payload.Data.EmployeeId}");
         var result = await _colaboradorService.handleEventWebhook(payload.Data);        
         if (result.IsError)
         {
