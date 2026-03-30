@@ -25,12 +25,15 @@ public class AsistenciaService
         var firstPageResponse = await _restClient.GetAsync<ResponseAsistencia>(ApiClientNames.Asistencia, $"{rootEndpoint}&desde={desde:dd-MM-yyyy}");
         if (firstPageResponse?.Data is null)
             return asistencias;
-        asistencias.AddRange(firstPageResponse.Data.Select(asistencia => asistencia.ToAsistenciaDTO()));
+        asistencias.AddRange(firstPageResponse.Data
+        .Where(asistencia => asistencia.SalidaFormat?.Length>4)
+        .Select(asistencia => asistencia.ToAsistenciaDTO()));
         long totalPages = firstPageResponse.Pagination?.TotalPages ?? 1;
         Console.WriteLine($"Total de páginas: {firstPageResponse.Data.Count} en la primera página, Total de páginas: {totalPages}");
         if (totalPages <= 1)
         {
             await _asistenciaRepository.InsertarLoteIgnorandoDuplicados(asistencias);
+            Console.WriteLine($"Total de asistencias obtenidas: {asistencias.Count}");
             return asistencias;
         }
 
@@ -40,11 +43,16 @@ public class AsistenciaService
         {
             if (pageResponse?.Data is null)
                 continue;
-            asistencias.AddRange(pageResponse.Data.Select(asistencia => asistencia.ToAsistenciaDTO()));
+           var asistenciasRegistar =     pageResponse.Data
+            .Where(asistencia => asistencia.SalidaFormat?.Length>4)
+            .Select(asistencia => asistencia.ToAsistenciaDTO()).ToList();
+
+            asistencias.AddRange(asistenciasRegistar);
         }
 
-        await _asistenciaRepository.InsertarLoteIgnorandoDuplicados(asistencias);
         Console.WriteLine($"Total de asistencias obtenidas: {asistencias.Count}");
+        await _asistenciaRepository.InsertarLoteIgnorandoDuplicados(asistencias);
+        
 
         return asistencias;
     }
