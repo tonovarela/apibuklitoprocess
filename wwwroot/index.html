@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Buk Lito Process</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(160deg, #0a0f1a 0%, #0f172a 25%, #1a2744 50%, #1e3a5f 75%, #0f172a 100%);
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        text-align: center;
+        padding: 3rem;
+        max-width: 600px;
+      }
+      .logo {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+      h1 {
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 300;
+      }
+      h1 span {
+        font-weight: 700;
+        color: #60a5fa;
+      }
+      .version {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        margin-bottom: 2rem;
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(96, 165, 250, 0.1);
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        border-radius: 2rem;
+        padding: 0.5rem 1.5rem;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+      }
+      .status .dot {
+        width: 10px;
+        height: 10px;
+        background: #2cb67d;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      .links {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+      }
+      .links a {
+        color: #60a5fa;
+        text-decoration: none;
+        border: 1px solid rgba(96, 165, 250, 0.4);
+        padding: 0.6rem 1.4rem;
+        border-radius: 0.5rem;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+      }
+      .links a:hover {
+        background: rgba(96, 165, 250, 0.15);
+        border-color: #60a5fa;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img
+        src="logo.png"
+        alt="Logo Buk"
+        style="width: 400px; margin-bottom: 1rem"
+      />
+      <div>
+        <span class="logo">&#9889;</span>
+        <h1>API <span>Buk </span></h1>
+      </div>
+      <p class="version">  Producción</p>
+      <div class="status">
+        <span class="dot"></span>
+        Servicio activo
+      </div>      
+    </div>
+  </body>
+</html>

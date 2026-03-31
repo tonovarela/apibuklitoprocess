@@ -4,6 +4,8 @@
 bin/
 obj/
 
+.env
+
 # Archivos de usuario de Visual Studio
 *.user
 *.suo
