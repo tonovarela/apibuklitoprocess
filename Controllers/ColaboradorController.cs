@@ -20,26 +20,7 @@ public class ColaboradorController : ControllerBase
     [HttpPost("webhook")]
     public async Task<IActionResult> webhook(WebhookPayload payload)
     {        
-        var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString();
-        var forwardedFor = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        var origin = HttpContext.Request.Headers["Origin"].FirstOrDefault();
-        var referer = HttpContext.Request.Headers["Referer"].FirstOrDefault();
-        var userAgent = HttpContext.Request.Headers["User-Agent"].FirstOrDefault();
-        var ip = forwardedFor ?? clientIp;
-
-        // DNS inverso para obtener el hostname del servidor que hace la petición
-        string? hostname = null;
-        try
-        {
-            if (System.Net.IPAddress.TryParse(ip, out var parsedIp))
-            {
-                var hostEntry = await System.Net.Dns.GetHostEntryAsync(parsedIp);
-                hostname = hostEntry.HostName;
-            }
-        }
-        catch { /* DNS inverso no disponible */ }
-
-        Console.WriteLine($"Webhook request from IP: {ip} | Hostname: {hostname ?? "N/A"} | Origin: {origin ?? "N/A"} | Referer: {referer ?? "N/A"} | User-Agent: {userAgent ?? "N/A"}");
+                
         Console.WriteLine($"Received webhook event:for Employee ID: {payload.Data.EmployeeId}");
         var result = await _colaboradorService.handleEventWebhook(payload.Data);        
         if (result.IsError)
