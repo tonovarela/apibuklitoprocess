@@ -11,9 +11,9 @@ public static class ColaboradorExtensions
          return new ColaboradorDTO
         {
             id = colaborador.id,
-            Nombre = colaborador.first_name ?? string.Empty,
-            ApellidoPaterno = colaborador.surname ?? string.Empty,
-            ApellidoMaterno = colaborador.second_surname ?? string.Empty,
+            Nombre = colaborador.first_name?.ToUpper() ?? string.Empty,
+            ApellidoPaterno = colaborador.surname?.ToUpper() ?? string.Empty,
+            ApellidoMaterno = colaborador.second_surname?.ToUpper() ?? string.Empty,
             
             CURP = colaborador.curp ?? string.Empty,
             RFC = colaborador.rfc ?? string.Empty,
@@ -75,6 +75,8 @@ public static class ColaboradorExtensions
 
             FechaAlta = colaborador.active_since ,
             FechaBaja = colaborador.active_until,
+            Salario = colaborador.current_job?.wage  ?? 0
+
             
 
 

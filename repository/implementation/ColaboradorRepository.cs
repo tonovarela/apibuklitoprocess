@@ -40,33 +40,29 @@ public class ColaboradorRepository : IColaboradorRepository
                                 Pais=@Pais,
                                 CodigoPostal=@CodigoPostal,
                                 Telefono=@Telefono,
-                                FechaNacimiento=@FechaNacimiento,
-                                
+                                FechaNacimiento=@FechaNacimiento,                                
                                 NivelAcademico=@NivelAcademico,
                                 Sexo=@Sexo,
                                 EstadoCivil=@EstadoCivil,
                                 Beneficiario = @Beneficiario1,
-
                                 BeneficiarioNacimiento = @BeneficiarioNacimiento1,
                                 Parentesco = @ParentescoBeneficiario1,
                                 Porcentaje = @PorcentajeBeneficiario1,
-
                                 Beneficiario2 = @Beneficiario2,
                                 Beneficiario2Nacimiento = @BeneficiarioNacimiento2,                                
                                 Parentesco2 = @ParentescoBeneficiario2,
                                 Porcentaje2 = @PorcentajeBeneficiario2,
-
                                 Beneficiario3 = @Beneficiario3,
                                 Beneficiario3Nacimiento = @BeneficiarioNacimiento3,
                                 Parentesco3 = @ParentescoBeneficiario3,
                                 Porcentaje3 = @PorcentajeBeneficiario3,
-
                                 DireccionNumero = @NumExt,
                                 DireccionNumeroInt = @NumInt,
                                 CentroCostos = @CentroCostos,
-                                Puesto = @Puesto,
-                                Departamento = @Departamento                                
-
+                                Puesto = @Puesto,     
+                                Sdi= @Salario,                           
+                                Departamento = @Departamento,
+                                FechaAlta = @FechaAlta                 
                                 where personal=@personal";
             var command = new SqlCommand(query, (SqlConnection)connection);
             command.Parameters.AddWithValue("@Id", colaborador.id);                    
@@ -107,6 +103,8 @@ public class ColaboradorRepository : IColaboradorRepository
             command.Parameters.AddWithValue("@CentroCostos", colaborador.CentroCostos ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Puesto", colaborador.Puesto ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Departamento", colaborador.Departamento ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@FechaAlta", colaborador.FechaAlta ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Salario", colaborador.Salario / 30);
             await command.ExecuteNonQueryAsync();    
 
         } 
@@ -256,8 +254,11 @@ public class ColaboradorRepository : IColaboradorRepository
                 Puesto,
                 Tipo,
                 FechaAlta,
-                Departamento
-                
+                Departamento,
+                DireccionNumero,
+                DireccionNumeroInt,
+                sdi
+                                
             )
             VALUES
             (                
@@ -286,7 +287,10 @@ public class ColaboradorRepository : IColaboradorRepository
                 @Puesto,
                 'Empleado',
                 @FechaAlta,
-                @Departamento
+                @Departamento,
+                @DireccionNumero,
+                @DireccionNumeroInt,
+                @Salario
             );";
 
         using var command = new SqlCommand(query, (SqlConnection)connection);
@@ -315,7 +319,9 @@ public class ColaboradorRepository : IColaboradorRepository
         command.Parameters.AddWithValue("@Puesto", colaborador.Puesto ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@FechaAlta", colaborador.FechaAlta ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@Departamento", colaborador.Departamento ?? (object)DBNull.Value);
-
+        command.Parameters.AddWithValue("@DireccionNumero", colaborador.NumExt ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@DireccionNumeroInt", colaborador.NumInt ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@Salario", colaborador.Salario / 30    );
         await command.ExecuteNonQueryAsync();
     }
     catch (SqlException ex)

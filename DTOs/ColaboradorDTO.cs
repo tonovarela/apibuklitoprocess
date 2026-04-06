@@ -7,7 +7,7 @@ public class ColaboradorDTO
 
     public long?  id { get; set; }
     public required string Nombre { get; set; }
-    public required string ApellidoPaterno { get; set; }
+    public required string ApellidoPaterno { get ; set; }
     public required string ApellidoMaterno { get; set; }
     
     public required string IdColaborador  { get; set; }
@@ -119,6 +119,8 @@ public class ColaboradorDTO
  public string? FechaAlta { get; set; }
 
  public string? ConceptoBaja { get; set; }
+
+ public double Salario { get; set; }
 
 
 
