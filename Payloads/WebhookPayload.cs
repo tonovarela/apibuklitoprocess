@@ -7,6 +7,8 @@ public class WebhookPayload
 {
         [JsonPropertyName("data")]
         public required WebhookPayloadBody Data { get; set; }
+
+
         public override string ToString()
         {
             return $"EventType: {Data.EventType}, Date: {Data.Date}, TenantUrl: {Data.TenantUrl}, EmployeeId: {Data.EmployeeId}, EmploymentStatus: {Data.EmploymentStatus}";
