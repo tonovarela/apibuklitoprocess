@@ -11,6 +11,7 @@ public class RestClientService
     }
      public async Task<T?> GetAsync<T>(string clientName, string url)
     {
+    
         var client = _httpClientFactory.CreateClient(clientName);        
         var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();

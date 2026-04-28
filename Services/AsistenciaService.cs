@@ -22,7 +22,9 @@ public class AsistenciaService
     {
         string rootEndpoint = $"v2/asistencia-empresa?page_size=100";
         var asistencias = new List<AsistenciaDTO>();
+        
         var firstPageResponse = await _restClient.GetAsync<ResponseAsistencia>(ApiClientNames.Asistencia, $"{rootEndpoint}&desde={desde:dd-MM-yyyy}");
+        
         if (firstPageResponse?.Data is null)
             return asistencias;
         asistencias.AddRange(firstPageResponse.Data
