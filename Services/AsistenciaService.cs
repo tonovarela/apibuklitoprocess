@@ -2,13 +2,11 @@ using apiBukLitoprocess.Clases;
 using apiBukLitoprocess.conf;
 using apiBukLitoprocess.DTOs;
 using apiBukLitoprocess.mappers;
+using apiBukLitoprocess.repository.implementation;
 using apiBukLitoprocess.repository.interfaces;
 using apiBukLitoprocess.responseApi;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.Identity.Client;
 
 namespace apiBukLitoprocess.Services;
-
 public class AsistenciaService
 {
     private readonly RestClientService _restClient;
@@ -20,28 +18,24 @@ public class AsistenciaService
         _asistenciaRepository = asistenciaRepository;
     }
 
-
     public async Task<List<ChecadaDTO>> RegistroChecadas(DateOnly desde)
     {
         List<ColaboradorDTO> colaboradores = await ObtenerColaboradoresActivos();
+        List<ChecadaDTO> checadaDTOs = new List<ChecadaDTO>();
         List<string> ListRFC = colaboradores.Select(c => c.RFC).ToList();
         foreach (var rfc in ListRFC)
         {
-
             var checadasColaborador = await ObtenerChecadas(rfc, desde);
             if (checadasColaborador.Count > 0)
             {
-                Console.WriteLine($"RFC: {rfc}");
-                Console.WriteLine($"Total de checadas obtenidas para RFC {rfc}: {checadasColaborador.Count}");
+                checadaDTOs.AddRange(checadasColaborador);
             }
-
         }
 
         Console.WriteLine($"Total de colaboradores activos obtenidos: {colaboradores.Count}");
-        return new List<ChecadaDTO>();
+        await _asistenciaRepository.InsertarLoteChecadasIgnorandoDuplicados(checadaDTOs);
+        return checadaDTOs;
     }
-
-
 
     public async Task<List<AsistenciaDTO>> RegistroAsistencias(DateOnly desde)
     {
@@ -120,16 +114,18 @@ public class AsistenciaService
     {
         var checadas = new List<ChecadaDTO>();
         DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-        var firstPageResponse = await _restClient.GetAsync<ResponseChecada>(ApiClientNames.Asistencia, $"obtenerRegistroAsistencia?obra_id=36915&from={desde:dd-MM-yyyy}&to={today:dd-MM-yyyy}&dni_colaborador={RFC}&page_size=100");
+        try
+        {
+            var firstPageResponse = await _restClient.GetAsync<ResponseChecada>(ApiClientNames.Asistencia, $"obtenerRegistroAsistencia?obra_id=36915&from={desde:dd-MM-yyyy}&to={today:dd-MM-yyyy}&dni_colaborador={RFC}&page_size=100");
         if (firstPageResponse?.Data == null)
         {
+        
             return checadas;
         }
         checadas.AddRange(firstPageResponse.Data.Select(checada => checada.ToChecadaDTO()));
         long totalPages = firstPageResponse.Pagination?.TotalPages ?? 1;
         if (totalPages <= 1)
         {
-
             return checadas;
         }
         var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseChecada>(ApiClientNames.Asistencia, $"obtenerRegistroAsistencia?obra_id=36915&from={desde:dd-MM-yyyy}&to={today:dd-MM-yyyy}&dni_colaborador={RFC}&page_size=100&page={page}"));
@@ -142,6 +138,13 @@ public class AsistenciaService
             }
             checadas.AddRange(pageResponse.Data.Select(checada => checada.ToChecadaDTO()));
         }
+            
+        }
+        catch (Exception e)
+        {
+           Console.WriteLine("Error: " + e.GetBaseException().Message);
+        }
+        
         return checadas;
     }
 

@@ -98,7 +98,9 @@ public class ColaboradorController : ControllerBase
             });
         }
         catch (Exception e)
-        {
+        { 
+
+            Console.WriteLine(e.GetBaseException().Message);
            
             return StatusCode(500, new
             {

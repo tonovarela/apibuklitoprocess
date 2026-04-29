@@ -11,6 +11,8 @@ public interface IAsistenciaRepository
   // public Task<bool> Existe(long idChecada);
 
    public  Task InsertarLoteIgnorandoDuplicados(List<AsistenciaDTO> asistencias);
+
+  public Task InsertarLoteChecadasIgnorandoDuplicados(List<ChecadaDTO> checadaDTOs);
     
 
 }
