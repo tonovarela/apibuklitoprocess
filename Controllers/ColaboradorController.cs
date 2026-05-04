@@ -19,10 +19,10 @@ public class ColaboradorController : ControllerBase
 
     [HttpPost("webhook")]
     public async Task<IActionResult> webhook(WebhookPayload payload)
-    {        
-                
+    {
+
         Console.WriteLine($"Received webhook event:for Employee ID: {payload.Data.EmployeeId}");
-        var result = await _colaboradorService.handleEventWebhook(payload.Data);        
+        var result = await _colaboradorService.handleEventWebhook(payload.Data);
         if (result.IsError)
         {
             return StatusCode(result.StatusCode, new
@@ -96,11 +96,16 @@ public class ColaboradorController : ControllerBase
      }
 
     [HttpGet("checadas")]
-    public async Task<IActionResult> GetChecadas()
+    public async Task<IActionResult> GetChecadas([FromQuery] int diasAtras = 1)
     {
+        if (diasAtras <= 0)
+        {
+            diasAtras = -1;
+        }
+
         try
         {
-            var checadas = await _asistenciaService.RegistroChecadas(DateOnly.FromDateTime(DateTime.Now.AddDays(-1)));
+            var checadas = await _asistenciaService.RegistroChecadas(DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras*(-1))));
             return Ok(new
             {
                 success = true,
@@ -109,10 +114,10 @@ public class ColaboradorController : ControllerBase
             });
         }
         catch (Exception e)
-        { 
+        {
 
             Console.WriteLine(e.GetBaseException().Message);
-           
+
             return StatusCode(500, new
             {
                 success = false,
@@ -124,6 +129,6 @@ public class ColaboradorController : ControllerBase
 
 
 
-    
+
 
 }
