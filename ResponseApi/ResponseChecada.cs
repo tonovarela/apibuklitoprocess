@@ -7,7 +7,7 @@ public class ResponseChecada
 {
 
     [JsonPropertyName("pagination")]
-    public required PaginationChecada Pagination { get; set; }
+    public required Pagination Pagination { get; set; }
 
     [JsonPropertyName("data")]
     public required List<ChecadaRest> Data { get; set; }
@@ -39,20 +39,3 @@ public partial class ChecadaRest
     
 }
 
-public partial class PaginationChecada
-{
-    [JsonPropertyName("next")]
-    public Uri? Next { get; set; }
-
-    [JsonPropertyName("previous")]
-    public Uri? Previous { get; set; }
-
-    [JsonPropertyName("count")]
-    public long Count { get; set; }
-
-    [JsonPropertyName("page")]
-    public long Page { get; set; }
-
-    [JsonPropertyName("totalPages")]
-    public long TotalPages { get; set; }
-}

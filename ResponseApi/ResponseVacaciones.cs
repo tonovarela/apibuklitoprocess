@@ -6,7 +6,7 @@ using apiBukLitoprocess.helpers;
 public class ResponseVacaciones
 {
     [JsonPropertyName("pagination")]
-    public required PaginationVacaciones pagination { get; set; }
+    public required Pagination pagination { get; set; }
 
     [JsonPropertyName("data")]
     public required List<VacacionesRest> Data { get; set; }
@@ -60,23 +60,3 @@ public partial class VacacionesRest
     public long? vacation_type_id { get; set; }
 }
 
-public partial class PaginationVacaciones
-{
-    [JsonPropertyName("next")]
-    public Uri? Next { get; set; }
-
-    [JsonPropertyName("previous")]
-    public Uri? Previous { get; set; }
-
-    [JsonPropertyName("count")]
-    [JsonConverter(typeof(FlexibleLongConverter))]
-    public long Count { get; set; }
-
-    [JsonPropertyName("page")]
-    [JsonConverter(typeof(FlexibleLongConverter))]
-    public long Page { get; set; }
-
-    [JsonPropertyName("totalPages")]
-    [JsonConverter(typeof(FlexibleLongConverter))]
-    public long TotalPages { get; set; }
-}

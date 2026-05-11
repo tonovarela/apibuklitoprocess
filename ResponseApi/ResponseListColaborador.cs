@@ -1,6 +1,4 @@
-using System.Collections;
-using System;
-using System.Collections.Generic;
+
 
 
 namespace apiBukLitoprocess.responseApi;
@@ -11,14 +9,4 @@ public class ResponseListColaborador
     public IEnumerable<ColaboradorResponse> data { get; set; } = new List<ColaboradorResponse>();
 }
 
-public partial class Pagination{ 
 
-    public string? next { get; set; }
-
-    public string? previous { get; set; }
-
-    public int count { get; set; } =0;
-
-    public int total_pages { get; set; } =0;
-    
-}
