@@ -139,10 +139,11 @@ public class ColaboradorService
 
     public async Task<List<SolicitudDTO>> ObtenerSolicitudesVacaciones()
     {
+        DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-20));        
         var solicitudes = new List<SolicitudDTO>();
         try
         {
-            var firstPageResponse = await _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, "vacations/requested?page_size=100&status=approved");
+            var firstPageResponse = await _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved");
             if (firstPageResponse?.Data == null)
             {
                 return solicitudes;
@@ -155,7 +156,7 @@ public class ColaboradorService
                 await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
                 return solicitudes;
             }
-            var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?page_size=100&status=approved&page={page}"));
+            var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved&page={page}"));
             var pageResponses = await Task.WhenAll(pageTasks);
             foreach (var pageResponse in pageResponses)
             {
