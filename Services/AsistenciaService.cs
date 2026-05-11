@@ -7,6 +7,7 @@ using apiBukLitoprocess.repository.interfaces;
 using apiBukLitoprocess.responseApi;
 
 namespace apiBukLitoprocess.Services;
+
 public class AsistenciaService
 {
     private readonly RestClientService _restClient;
@@ -37,7 +38,7 @@ public class AsistenciaService
         return checadaDTOs;
     }
 
-   
+
     private async Task<List<ColaboradorDTO>> ObtenerColaboradoresActivos()
     {
         var colaboradores = new List<ColaboradorDTO>();
@@ -74,35 +75,77 @@ public class AsistenciaService
         try
         {
             var firstPageResponse = await _restClient.GetAsync<ResponseChecada>(ApiClientNames.Asistencia, $"obtenerRegistroAsistencia?obra_id=36915&from={desde:dd-MM-yyyy}&to={today:dd-MM-yyyy}&dni_colaborador={RFC}&page_size=100");
-        if (firstPageResponse?.Data == null)
-        {
-        
-            return checadas;
-        }
-        checadas.AddRange(firstPageResponse.Data.Select(checada => checada.ToChecadaDTO()));
-        long totalPages = firstPageResponse.Pagination?.TotalPages ?? 1;
-        if (totalPages <= 1)
-        {
-            return checadas;
-        }
-        var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseChecada>(ApiClientNames.Asistencia, $"obtenerRegistroAsistencia?obra_id=36915&from={desde:dd-MM-yyyy}&to={today:dd-MM-yyyy}&dni_colaborador={RFC}&page_size=100&page={page}"));
-        var pageResponses = await Task.WhenAll(pageTasks);
-        foreach (var pageResponse in pageResponses)
-        {
-            if (pageResponse?.Data == null)
+            if (firstPageResponse?.Data == null)
             {
-                continue;
+
+                return checadas;
             }
-            checadas.AddRange(pageResponse.Data.Select(checada => checada.ToChecadaDTO()));
-        }
-            
+            checadas.AddRange(firstPageResponse.Data.Select(checada => checada.ToChecadaDTO()));
+            long totalPages = firstPageResponse.Pagination?.TotalPages ?? 1;
+            if (totalPages <= 1)
+            {
+                return checadas;
+            }
+            var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseChecada>(ApiClientNames.Asistencia, $"obtenerRegistroAsistencia?obra_id=36915&from={desde:dd-MM-yyyy}&to={today:dd-MM-yyyy}&dni_colaborador={RFC}&page_size=100&page={page}"));
+            var pageResponses = await Task.WhenAll(pageTasks);
+            foreach (var pageResponse in pageResponses)
+            {
+                if (pageResponse?.Data == null)
+                {
+                    continue;
+                }
+                checadas.AddRange(pageResponse.Data.Select(checada => checada.ToChecadaDTO()));
+            }
+
         }
         catch (Exception e)
         {
-           Console.WriteLine("Error: " + e.GetBaseException().Message);
+            Console.WriteLine("Error: " + e.GetBaseException().Message);
         }
-        
+
         return checadas;
     }
 
+
+
+    public async Task<List<SolicitudDTO>> ObtenerSolicitudesVacaciones()
+    {
+        var solicitudes = new List<SolicitudDTO>();
+        try
+        {
+            var firstPageResponse = await _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, "vacations/requested?page_size=100&status=approved");
+            if (firstPageResponse?.Data == null)
+            {
+                return solicitudes;
+            }
+            Console.WriteLine("First page of vacation requests retrieved successfully.");
+            solicitudes.AddRange(firstPageResponse.Data.Select(vacaciones => vacaciones.toSolicitudDTO()));
+            long totalPages = firstPageResponse.pagination?.TotalPages ?? 1;
+            if (totalPages <= 1)
+            {
+                return solicitudes;
+            }
+            var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?page_size=100&status=approved&page={page}"));
+            var pageResponses = await Task.WhenAll(pageTasks);
+            foreach (var pageResponse in pageResponses)
+            {
+                if (pageResponse?.Data == null)
+                {
+                    continue;
+                }
+                solicitudes.AddRange(pageResponse.Data.Select(vacaciones => vacaciones.toSolicitudDTO()));
+            }
+        }
+        catch (Exception e)
+        {
+
+            Console.WriteLine("Error: " + e.GetBaseException().Message);
+            return solicitudes;
+        }
+
+        return solicitudes;
+    }
+
 }
+
+

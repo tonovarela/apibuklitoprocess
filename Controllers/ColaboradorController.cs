@@ -68,21 +68,32 @@ public class ColaboradorController : ControllerBase
 
 
 
-    // [HttpGet("checadas")]
-    // public async Task<IActionResult> GetChecadas()
-    // {
-    //     try
-    //     {           
-    //         var checadas = await _asistenciaService.RegistroAsistencias(DateOnly.FromDateTime(DateTime.Now.AddDays(-30)));            
-    //         return Ok(new{success = true,statusCode = 200,data = checadas});
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         Console.WriteLine(e.GetBaseException().Message);
-    //         return StatusCode(500, new{success = false,statusCode = 500,message = "Internal server error"
-    //         });
-    //     }
-    // }
+    
+
+     [HttpGet("vacaciones")]
+     public async Task<IActionResult> GetVacaciones()
+     {
+         try
+         {
+             var vacaciones = await _asistenciaService.ObtenerSolicitudesVacaciones();
+             return Ok(new
+             {
+                 success = true,
+                 statusCode = 200,
+                 data = vacaciones
+             });
+         }
+         catch (Exception e)
+         {
+             Console.WriteLine(e.GetBaseException().Message);
+             return StatusCode(500, new
+             {
+                 success = false,
+                 statusCode = 500,
+                 message = "Internal server error"
+             });
+         }
+     }
 
     [HttpGet("checadas")]
     public async Task<IActionResult> GetChecadas()
