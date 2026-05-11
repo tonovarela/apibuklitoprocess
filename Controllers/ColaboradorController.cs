@@ -75,7 +75,7 @@ public class ColaboradorController : ControllerBase
      {
          try
          {
-             var vacaciones = await _asistenciaService.ObtenerSolicitudesVacaciones();
+             var vacaciones = await _colaboradorService.ObtenerSolicitudesVacaciones();
              return Ok(new
              {
                  success = true,

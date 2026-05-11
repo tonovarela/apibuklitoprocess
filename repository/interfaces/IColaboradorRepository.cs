@@ -25,4 +25,6 @@ public Task RegistrarBaja(string idPersonalBuk, string conceptoBaja,string fecha
 
 public Task<String> ObtenerEquivalenciaArea(long idAreaBuk);  
 
+ public Task RegistrarSolicitudesVacaciones(List<SolicitudDTO> solicitudes);
+
 }

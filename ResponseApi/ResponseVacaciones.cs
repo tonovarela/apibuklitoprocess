@@ -1,6 +1,7 @@
 namespace apiBukLitoprocess.responseApi;
 
 using System.Text.Json.Serialization;
+using apiBukLitoprocess.helpers;
 
 public class ResponseVacaciones
 {
@@ -14,43 +15,49 @@ public class ResponseVacaciones
 public partial class VacacionesRest
 {
     [JsonPropertyName("id")]
+    [JsonConverter(typeof(FlexibleLongConverter))]
     public long id { get; set; }
 
     [JsonPropertyName("employee_id")]
+    [JsonConverter(typeof(FlexibleLongConverter))]
     public long employee_id { get; set; }
 
     [JsonPropertyName("approved_by_id")]
-    public long approved_by_id { get; set; }
+    [JsonConverter(typeof(FlexibleNullableLongConverter))]
+    public long? approved_by_id { get; set; }
 
     [JsonPropertyName("approved_at")]
-    public DateTimeOffset approved_at { get; set; }
+    public DateTimeOffset? approved_at { get; set; }
 
     [JsonPropertyName("working_days")]
-    public long working_days { get; set; }
+    [JsonConverter(typeof(FlexibleNullableLongConverter))]
+    public long? working_days { get; set; }
 
     [JsonPropertyName("calendar_days")]
-    public long calendar_days { get; set; }
+    [JsonConverter(typeof(FlexibleNullableLongConverter))]
+    public long? calendar_days { get; set; }
 
     [JsonPropertyName("workday_stage")]
-    public required string workday_stage { get; set; }
+    public string? workday_stage { get; set; }
 
     [JsonPropertyName("start_date")]
-    public DateOnly start_date { get; set; }
+    public DateOnly? start_date { get; set; }
 
     [JsonPropertyName("end_date")]
-    public DateOnly end_date { get; set; }
+    public DateOnly? end_date { get; set; }
 
     [JsonPropertyName("type")]
-    public required string type { get; set; }
+    public string? type { get; set; }
 
     [JsonPropertyName("requested_at")]
-    public DateTimeOffset requested_at { get; set; }
+    public DateTimeOffset? requested_at { get; set; }
 
     [JsonPropertyName("status")]
-    public required string status { get; set; }
+    public string? status { get; set; }
 
     [JsonPropertyName("vacation_type_id")]
-    public long vacation_type_id { get; set; }
+    [JsonConverter(typeof(FlexibleNullableLongConverter))]
+    public long? vacation_type_id { get; set; }
 }
 
 public partial class PaginationVacaciones
@@ -62,11 +69,14 @@ public partial class PaginationVacaciones
     public Uri? Previous { get; set; }
 
     [JsonPropertyName("count")]
+    [JsonConverter(typeof(FlexibleLongConverter))]
     public long Count { get; set; }
 
     [JsonPropertyName("page")]
+    [JsonConverter(typeof(FlexibleLongConverter))]
     public long Page { get; set; }
 
     [JsonPropertyName("totalPages")]
+    [JsonConverter(typeof(FlexibleLongConverter))]
     public long TotalPages { get; set; }
 }

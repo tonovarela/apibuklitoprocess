@@ -29,7 +29,7 @@ public class ColaboradorService
     private readonly HashSet<string> EventosValidos = new(StringComparer.OrdinalIgnoreCase){
         "employee_update",
         "job_hire",
-        "job_termination",        
+        "job_termination",
         "job_movement"
         };
 
@@ -47,21 +47,21 @@ public class ColaboradorService
         string eventType = bodyPayload.EventType;
         int idEmployeeBuk = bodyPayload.EmployeeId;
 
-        EventLogger.Info("webhook_event", bodyPayload);    
+        EventLogger.Info("webhook_event", bodyPayload);
 
         if (string.IsNullOrWhiteSpace(eventType))
-        {                        
+        {
             await RegistrarBitacoraAsync(BitacoraDTO.NoSoportado(idEmployeeBuk, eventType));
             return GetColaboradorResult.Fail("Evento inválido", 400);
         }
-                    
+
         if (!EventosValidos.Contains(eventType))
         {
             await RegistrarBitacoraAsync(BitacoraDTO.NoSoportado(idEmployeeBuk, eventType));
             return GetColaboradorResult.Fail("Evento no soportado", 400);
         }
 
-        GetColaboradorResult result = await GetColaboradorByIdBuk(idEmployeeBuk);        
+        GetColaboradorResult result = await GetColaboradorByIdBuk(idEmployeeBuk);
         if (result.IsError || result.colaborador is null)
         {
             await RegistrarBitacoraAsync(BitacoraDTO.Error(idEmployeeBuk, eventType, $"No se pudo obtener el colaborador de Buk: {result.ErrorMessage}"));
@@ -83,8 +83,8 @@ public class ColaboradorService
                     break;
 
                 case "job_termination":
-                    
-                    await _colaboradorRepository.RegistrarBaja(idEmployeeBuk.ToString(),colaborador.ConceptoBaja!,colaborador.FechaBaja!);
+
+                    await _colaboradorRepository.RegistrarBaja(idEmployeeBuk.ToString(), colaborador.ConceptoBaja!, colaborador.FechaBaja!);
                     break;
             }
             await RegistrarBitacoraAsync(BitacoraDTO.Exito(idEmployeeBuk, eventType));
@@ -105,7 +105,7 @@ public class ColaboradorService
     public async Task<List<ColaboradorDTO>> Sincronizar()
     {
         var colaboradores = new List<ColaboradorDTO>();
-        var firstPageResponse = await _restClient.GetAsync<ResponseListColaborador>(ApiClientNames.Buk,"employees");
+        var firstPageResponse = await _restClient.GetAsync<ResponseListColaborador>(ApiClientNames.Buk, "employees");
         if (firstPageResponse?.data == null)
         {
             return colaboradores;
@@ -117,7 +117,7 @@ public class ColaboradorService
 
             return colaboradores;
         }
-        var pageTasks = Enumerable.Range(2, totalPages - 1).Select(page => _restClient.GetAsync<ResponseListColaborador>(ApiClientNames.Buk,$"employees?page={page}"));
+        var pageTasks = Enumerable.Range(2, totalPages - 1).Select(page => _restClient.GetAsync<ResponseListColaborador>(ApiClientNames.Buk, $"employees?page={page}"));
         var pageResponses = await Task.WhenAll(pageTasks);
         foreach (var pageResponse in pageResponses)
         {
@@ -136,7 +136,66 @@ public class ColaboradorService
     }
 
 
+
+    public async Task<List<SolicitudDTO>> ObtenerSolicitudesVacaciones()
+    {
+        var solicitudes = new List<SolicitudDTO>();
+        try
+        {
+            var firstPageResponse = await _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, "vacations/requested?page_size=100&status=approved");
+            if (firstPageResponse?.Data == null)
+            {
+                return solicitudes;
+            }
+            solicitudes.AddRange(firstPageResponse.Data.Where(vacaciones => vacaciones.PuedeMapearseASolicitud()).Select(vacaciones => vacaciones.toSolicitudDTO()));
+            long totalPages = firstPageResponse.pagination?.TotalPages ?? 1;
+            if (totalPages <= 1)
+            {
+                await AsignarIDSIntelisis(solicitudes);
+                await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
+                return solicitudes;
+            }
+            var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?page_size=100&status=approved&page={page}"));
+            var pageResponses = await Task.WhenAll(pageTasks);
+            foreach (var pageResponse in pageResponses)
+            {
+                if (pageResponse?.Data == null)
+                {
+                    continue;
+                }
+                solicitudes.AddRange(pageResponse.Data.Where(vacaciones => vacaciones.PuedeMapearseASolicitud()).Select(vacaciones => vacaciones.toSolicitudDTO()));
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error: " + e.GetBaseException().Message);
+            return solicitudes;
+        }
+        await AsignarIDSIntelisis(solicitudes);
+        await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
+
+        return solicitudes;
+    }
+
+
+
+
+
     #region Métodos privados
+
+    private async Task AsignarIDSIntelisis(List<SolicitudDTO> solicitudes)
+    {
+
+        foreach (var solicitud in solicitudes)
+        {
+            var colaboradorResponse = await GetColaboradorByIdBuk(solicitud.id_colaborador);            
+            if (colaboradorResponse is not null)
+            {
+                solicitud.personal = colaboradorResponse!.colaborador?.IdColaborador ?? String.Empty;
+            }
+        }
+
+    }
 
     private async Task ProcesarJobHireAsync(long idEmployeeBuk, ColaboradorDTO colaborador)
     {
@@ -146,12 +205,12 @@ public class ColaboradorService
 
         await RegistrarSiNoExisteAsync(colaborador);
 
-        
 
 
 
 
-        await _restClient.PatchAsync(ApiClientNames.Buk,$"employees/{idEmployeeBuk}", new
+
+        await _restClient.PatchAsync(ApiClientNames.Buk, $"employees/{idEmployeeBuk}", new
         {
             custom_attributes = new { idColaborador = colaborador.IdColaborador }
         });
@@ -162,16 +221,16 @@ public class ColaboradorService
         try
         {
             Console.WriteLine($"Obteniendo colaborador de Buk para Employee ID: {ApiClientNames.Buk}");
-            var response = await _restClient.GetAsync<ResponseColaborador>(ApiClientNames.Buk,$"employees/{idEmployeeBuk}");
+            var response = await _restClient.GetAsync<ResponseColaborador>(ApiClientNames.Buk, $"employees/{idEmployeeBuk}");
             if (response?.data == null)
             {
                 return GetColaboradorResult.Fail("Colaborador no encontrado", 404);
             }
-                    
-            ColaboradorDTO colaborador = response.data.ToColaboradorDTO();            
+
+            ColaboradorDTO colaborador = response.data.ToColaboradorDTO();
             long areaBuk = response.data.current_job?.area_id ?? 0;
             string departamento = await _colaboradorRepository.ObtenerEquivalenciaArea(areaBuk);
-            colaborador.Departamento = departamento;                
+            colaborador.Departamento = departamento;
             return GetColaboradorResult.Ok(colaborador);
         }
         catch (JsonException ex)

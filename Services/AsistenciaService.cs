@@ -108,43 +108,7 @@ public class AsistenciaService
 
 
 
-    public async Task<List<SolicitudDTO>> ObtenerSolicitudesVacaciones()
-    {
-        var solicitudes = new List<SolicitudDTO>();
-        try
-        {
-            var firstPageResponse = await _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, "vacations/requested?page_size=100&status=approved");
-            if (firstPageResponse?.Data == null)
-            {
-                return solicitudes;
-            }
-            Console.WriteLine("First page of vacation requests retrieved successfully.");
-            solicitudes.AddRange(firstPageResponse.Data.Select(vacaciones => vacaciones.toSolicitudDTO()));
-            long totalPages = firstPageResponse.pagination?.TotalPages ?? 1;
-            if (totalPages <= 1)
-            {
-                return solicitudes;
-            }
-            var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?page_size=100&status=approved&page={page}"));
-            var pageResponses = await Task.WhenAll(pageTasks);
-            foreach (var pageResponse in pageResponses)
-            {
-                if (pageResponse?.Data == null)
-                {
-                    continue;
-                }
-                solicitudes.AddRange(pageResponse.Data.Select(vacaciones => vacaciones.toSolicitudDTO()));
-            }
-        }
-        catch (Exception e)
-        {
-
-            Console.WriteLine("Error: " + e.GetBaseException().Message);
-            return solicitudes;
-        }
-
-        return solicitudes;
-    }
+  
 
 }
 
