@@ -48,7 +48,7 @@ public class AsistenciaService
             return colaboradores;
         }
         colaboradores.AddRange(firstPageResponse.data.Select(colaborador => colaborador.ToColaboradorDTO()));
-        int totalPages = firstPageResponse.pagination?.total_pages ?? 1;
+        int totalPages = firstPageResponse.pagination?.TotalPages ?? 1;
         if (totalPages <= 1)
         {
 

@@ -12,12 +12,12 @@ public class Pagination
     public Uri? Previous { get; set; }
 
     [JsonPropertyName("count")]
-    public long Count { get; set; }
+    public int Count { get; set; }
 
     [JsonPropertyName("page")]
-    public long Page { get; set; }
+    public int Page { get; set; }
 
     [JsonPropertyName("totalPages")]
-    public long TotalPages { get; set; }
+    public int TotalPages { get; set; }
 
 }
