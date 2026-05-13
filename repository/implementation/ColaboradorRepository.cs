@@ -412,4 +412,63 @@ public class ColaboradorRepository : IColaboradorRepository
         }
 
     }
+
+    public async Task RegistrarAusencias(List<AusenciaDTO> ausencias)
+    {
+         if (ausencias.Count == 0)
+        {
+            return;
+        }
+
+        using var connection = (SqlConnection)_dbConnectionFactory.CreateConnection();
+        using var tx = connection.BeginTransaction();
+
+        const string sql = @"
+        INSERT INTO Buk.dbo.Ausencias
+            (id_ausencia, id_colaborador,personal,justificacion, tipo, fecha, hora_inicio, hora_fin)
+        VALUES
+            (@IdAusencia, @IdColaborador, @Personal, @Justificacion, @Tipo, @Fecha, @HoraEntrada, @HoraSalida);";
+
+        try
+        {
+
+            using var cmd = new SqlCommand(sql, connection, tx);
+            cmd.Parameters.Add("@IdAusencia", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@IdColaborador", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Personal", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Justificacion", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Tipo", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Fecha", SqlDbType.DateTime);
+            cmd.Parameters.Add("@HoraEntrada", SqlDbType.Time);
+            cmd.Parameters.Add("@HoraSalida", SqlDbType.Time);       
+            foreach (var s in ausencias)
+            {
+                cmd.Parameters["@IdAusencia"].Value = s.id_Ausencia;
+                cmd.Parameters["@IdColaborador"].Value = s.id_colaborador;
+                cmd.Parameters["@Personal"].Value = s.personal;
+                cmd.Parameters["@Justificacion"].Value = s.justificacion;
+                cmd.Parameters["@Tipo"].Value = s.tipo;
+                cmd.Parameters["@Fecha"].Value = DateTime.Parse(s.fecha);
+                cmd.Parameters["@HoraEntrada"].Value = string.IsNullOrEmpty(s.horaEntrada) ? (object)DBNull.Value : TimeSpan.Parse(s.horaEntrada);
+                cmd.Parameters["@HoraSalida"].Value = string.IsNullOrEmpty(s.horaSalida) ? (object)DBNull.Value : TimeSpan.Parse(s.horaSalida);
+
+                try
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                    Console.WriteLine($"Ausencia registrada: {s.id_Ausencia} para colaborador {s.id_colaborador}");
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            tx.Commit();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al preparar comando SQL para registrar ausencias: {ex.Message}");
+            tx.Rollback();
+        }
+    }
 }

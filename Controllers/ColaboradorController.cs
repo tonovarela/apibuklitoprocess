@@ -67,8 +67,30 @@ public class ColaboradorController : ControllerBase
     }
 
 
-
-    
+     [HttpGet("ausencias")]
+     public async Task<IActionResult> GetAusencias()
+     {
+         try
+         {
+             var ausencias = await _colaboradorService.ObtenerAusencias();
+             return Ok(new
+             {
+                 success = true,
+                 statusCode = 200,
+                 data = ausencias
+             });
+         }
+         catch (Exception e)
+         {
+             Console.WriteLine(e.GetBaseException().Message);
+             return StatusCode(500, new
+             {
+                 success = false,
+                 statusCode = 500,
+                 message = "Internal server error"
+             });
+         }
+     }
 
      [HttpGet("vacaciones")]
      public async Task<IActionResult> GetVacaciones()
