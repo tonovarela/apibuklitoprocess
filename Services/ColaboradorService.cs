@@ -182,7 +182,7 @@ public class ColaboradorService
 
     public async Task<List<AusenciaDTO>> ObtenerAusencias()
     {
-        DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-120));
+        DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-200));
         Console.WriteLine($"Fecha consulta ausencias: {fechaConsulta}");
         DateOnly fechaFinConsulta = DateOnly.FromDateTime(DateTime.Now);
         var ausencias = new List<AusenciaDTO>();
