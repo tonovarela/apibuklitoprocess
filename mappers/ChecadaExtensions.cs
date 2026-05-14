@@ -8,7 +8,6 @@ namespace apiBukLitoprocess.mappers;
 
 public static class ChecadaExtensions
 {
-
     public static string GenerateHashId(string input)
     {
         using (SHA256 sha256 = SHA256.Create())
