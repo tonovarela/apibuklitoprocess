@@ -6,6 +6,7 @@ namespace apiBukLitoprocess.mappers;
 
 public static class AusenciaExtensions
 {
+    
     public static AusenciaDTO ToAusenciaDTO(this AusenciaRest ausencia)
     {
         return new AusenciaDTO
@@ -16,8 +17,7 @@ public static class AusenciaExtensions
             fecha = ausencia.Fecha_inicio.ToString("yyyy-MM-dd"),
             justificacion = ausencia.Justificacion,
             horaEntrada = ausencia.Inicio,
-            horaSalida = ausencia.Fin
-            
+            horaSalida = ausencia.Fin            
         };
     }
 

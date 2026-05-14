@@ -2,12 +2,9 @@ using apiBukLitoprocess.Clases;
 using apiBukLitoprocess.conf;
 using apiBukLitoprocess.DTOs;
 using apiBukLitoprocess.mappers;
-using apiBukLitoprocess.repository.implementation;
 using apiBukLitoprocess.repository.interfaces;
 using apiBukLitoprocess.responseApi;
-
 namespace apiBukLitoprocess.Services;
-
 public class AsistenciaService
 {
     private readonly RestClientService _restClient;
