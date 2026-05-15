@@ -1,19 +1,21 @@
+
 using System.Text.Json.Serialization;
 namespace apiBukLitoprocess.responseApi;
 
-public class ResponseAusencia
+public class ResponsePermiso
 {
 
     [JsonPropertyName("pagination")]
     public required Pagination Pagination { get; set; }
-
+    
     [JsonPropertyName("data")]
-    public required AusenciaRest[] Data { get; set; }
+    public required PermisoRest[] Data { get; set; }
 
 }
 
-public class AusenciaRest
+public partial class PermisoRest
 {
+    
     [JsonPropertyName("id")]
     public required long Id { get; set; }
 
@@ -22,9 +24,13 @@ public class AusenciaRest
 
     [JsonPropertyName("end_date")]
     public required DateOnly Fecha_fin { get; set; }
+    
 
-    [JsonPropertyName("absence_type_code")]
-    public required string Tipo { get; set; }
+    [JsonPropertyName("days_count")]
+    public float dias { get; set; }
+
+    [JsonPropertyName("day_percent")]
+    public float dias_proporcional { get; set; }
 
     [JsonPropertyName("status")]
     public required string Estado { get; set; }
@@ -35,14 +41,17 @@ public class AusenciaRest
     [JsonPropertyName("employee_id")]
     public required long EmployeeId { get; set; }
 
+    [JsonPropertyName("permission_type_code")]
+    public required string Tipo{ get; set; }
 
-   [JsonPropertyName("days_count")]
-    public float dias { get; set; }
+    [JsonPropertyName("start_time")]
+    public  string? Inicio { get; set; }
 
-    [JsonPropertyName("day_percent")]
-    public float dias_proporcional { get; set; }
+    [JsonPropertyName("end_time")]
+    public  string? Fin { get; set; }
 
     [JsonPropertyName("paid")]
     public bool ConGoceSueldo { get; set; }
- 
+  
+
 }

@@ -67,55 +67,66 @@ public class ColaboradorController : ControllerBase
     }
 
 
-     [HttpGet("ausencias")]
-     public async Task<IActionResult> GetAusencias()
-     {
-         try
-         {
-             var ausencias = await _colaboradorService.ObtenerAusencias();
-             return Ok(new
-             {
-                 success = true,
-                 statusCode = 200,
-                 data = ausencias
-             });
-         }
-         catch (Exception e)
-         {
-             Console.WriteLine(e.GetBaseException().Message);
-             return StatusCode(500, new
-             {
-                 success = false,
-                 statusCode = 500,
-                 message = "Internal server error"
-             });
-         }
-     }
+    [HttpGet("ausencias")]
+    public async Task<IActionResult> GetAusencias([FromQuery] int diasAtras = 1)
+    {
+        if (diasAtras <= 0)
+        {
+            diasAtras = 1;
+        }
+        diasAtras = diasAtras * -1;
 
-     [HttpGet("vacaciones")]
-     public async Task<IActionResult> GetVacaciones()
-     {
-         try
-         {
-             var vacaciones = await _colaboradorService.ObtenerSolicitudesVacaciones();
-             return Ok(new
-             {
-                 success = true,
-                 statusCode = 200,
-                 data = vacaciones
-             });
-         }
-         catch (Exception e)
-         {
-             Console.WriteLine(e.GetBaseException().Message);
-             return StatusCode(500, new
-             {
-                 success = false,
-                 statusCode = 500,
-                 message = "Internal server error"
-             });
-         }
-     }
+        try
+        {
+            var permisos = await _colaboradorService.ObtenerPermisos(diasAtras);
+            var ausencias = await _colaboradorService.ObtenerAusencias(diasAtras);
+            return Ok(new
+            {
+                success = true,
+                statusCode = 200,
+                data = new
+                {
+                    permisos,
+                    ausencias
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.GetBaseException().Message);
+            return StatusCode(500, new
+            {
+                success = false,
+                statusCode = 500,
+                message = "Internal server error"
+            });
+        }
+    }
+
+    [HttpGet("vacaciones")]
+    public async Task<IActionResult> GetVacaciones()
+    {
+        try
+        {
+            var vacaciones = await _colaboradorService.ObtenerSolicitudesVacaciones();
+            return Ok(new
+            {
+                success = true,
+                statusCode = 200,
+                data = vacaciones
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.GetBaseException().Message);
+            return StatusCode(500, new
+            {
+                success = false,
+                statusCode = 500,
+                message = "Internal server error"
+            });
+        }
+    }
 
     [HttpGet("checadas")]
     public async Task<IActionResult> GetChecadas([FromQuery] int diasAtras = 1)
@@ -127,7 +138,7 @@ public class ColaboradorController : ControllerBase
 
         try
         {
-            var checadas = await _asistenciaService.RegistroChecadas(DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras*(-1))));
+            var checadas = await _asistenciaService.RegistroChecadas(DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras * (-1))));
             return Ok(new
             {
                 success = true,
@@ -152,8 +163,8 @@ public class ColaboradorController : ControllerBase
 
 
 
-   [HttpGet("jornadas")] 
-   public async Task<IActionResult> GetJornadas([FromQuery] int diasAtras = 1)
+    [HttpGet("jornadas")]
+    public async Task<IActionResult> GetJornadas([FromQuery] int diasAtras = 1)
     {
         if (diasAtras <= 0)
         {
@@ -161,7 +172,7 @@ public class ColaboradorController : ControllerBase
         }
         try
         {
-            var jornadas = await _asistenciaService.registroJornada(DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras*(-1))));
+            var jornadas = await _asistenciaService.registroJornada(DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras * (-1))));
             return Ok(new
             {
                 success = true,

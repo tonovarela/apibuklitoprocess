@@ -131,7 +131,7 @@ public class ColaboradorService
     {
         DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-20));
         var solicitudes = new List<SolicitudDTO>();
-        var vacaciones=  await _restClient.ObtenerPaginadoAsync<ResponseVacaciones, VacacionesRest, VacacionesRest>(
+        var vacaciones = await _restClient.ObtenerPaginadoAsync<ResponseVacaciones, VacacionesRest, VacacionesRest>(
             ApiClientNames.Buk,
             page => page == 1
                 ? $"vacations/requested?date={fechaConsulta:yyyy-MM-dd}&page_size=100&status=approved"
@@ -147,107 +147,64 @@ public class ColaboradorService
 
         await AsignarIDSIntelisis(solicitudes);
         await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
-        // try
-        // {
-        //     var firstPageResponse = await _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved");
-        //     if (firstPageResponse?.Data == null)
-        //     {
-        //         return solicitudes;
-        //     }
-        //     solicitudes.AddRange(firstPageResponse.Data.Where(vacaciones => vacaciones.PuedeMapearseASolicitud()).Select(vacaciones => vacaciones.toSolicitudDTO()));
-        //     long totalPages = firstPageResponse.pagination?.TotalPages ?? 1;
-        //     if (totalPages <= 1)
-        //     {
-        //         await AsignarIDSIntelisis(solicitudes);
-        //         await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
-        //         return solicitudes;
-        //     }
-        //     var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved&page={page}"));
-        //     var pageResponses = await Task.WhenAll(pageTasks);
-        //     foreach (var pageResponse in pageResponses)
-        //     {
-        //         if (pageResponse?.Data == null)
-        //         {
-        //             continue;
-        //         }
-        //         solicitudes.AddRange(pageResponse.Data.Where(vacaciones => vacaciones.PuedeMapearseASolicitud()).Select(vacaciones => vacaciones.toSolicitudDTO()));
-        //     }
-        // }
-        // catch (Exception e)
-        // {
-        //     Console.WriteLine("Error: " + e.GetBaseException().Message);
-        //     return solicitudes;
-        // }
-        // await AsignarIDSIntelisis(solicitudes);
-        // await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
-
         return solicitudes;
     }
 
 
 
-    public async Task<List<AusenciaDTO>> ObtenerAusencias()
+    public async Task<List<AusenciaDTO>> ObtenerPermisos(int diasAtras)
     {
-        DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-200));
-        Console.WriteLine($"Fecha consulta ausencias: {fechaConsulta}");
-        DateOnly fechaFinConsulta = DateOnly.FromDateTime(DateTime.Now);
-         var ausencias = new List<AusenciaDTO>();
-       var _ausencias= await _restClient.ObtenerPaginadoAsync<ResponseAusencia, AusenciaRest, AusenciaRest>(
-            ApiClientNames.Buk,
-            page => page == 1
-                ? $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100"
-                : $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100&page={page}",
-            response => response.Data,
-            response => response.Pagination?.TotalPages ?? 1,
-            ausencia => ausencia
-            );
-           
-           ausencias = _ausencias.Where(ausencia => ausencia.Estado == "approved")
-                                .Select(ausencia => ausencia.ToAusenciaDTO())
-                                .ToList();
+        
+            DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras));
+            Console.WriteLine($"Fecha consulta permisos: {fechaConsulta}");
+            DateOnly fechaFinConsulta = DateOnly.FromDateTime(DateTime.Now);
+            var permisos = new List<AusenciaDTO>();
+            var _permisos = await _restClient.ObtenerPaginadoAsync<ResponsePermiso, PermisoRest, PermisoRest>(
+                 ApiClientNames.Buk,
+                 page => page == 1
+                     ? $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100"
+                     : $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100&page={page}",
+                 response => response.Data,
+                 response => response.Pagination?.TotalPages ?? 1,
+                 ausencia => ausencia
+                 );
+            permisos = _permisos
+            .Where(p => p.Estado == "approved")
+                                 .Select(p => p.toAusenciaDTO())
+                                 .ToList();
 
-        await AsignarIDSIntelisis(ausencias);
-        await _colaboradorRepository.RegistrarAusencias(ausencias);
-           
-
-        // try
-        // {
-        //     var firstPageResponse = await _restClient.GetAsync<ResponseAusencia>(ApiClientNames.Buk, $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100");
-        //     if (firstPageResponse?.Data == null)
-        //     {
-        //         return ausencias;
-        //     }
-        //     ausencias.AddRange(firstPageResponse.Data.Where(ausencia => ausencia.Estado == "approved").Select(ausencia => ausencia.ToAusenciaDTO()));
-        //     long totalPages = firstPageResponse.Pagination?.TotalPages ?? 1;
-        //     if (totalPages <= 1)
-        //     {
-        //         await AsignarIDSIntelisis(ausencias);
-        //         await _colaboradorRepository.RegistrarAusencias(ausencias);
-        //         return ausencias;
-        //     }
-        //     var pageTasks = Enumerable.Range(2, (int)totalPages - 1)
-        //                               .Select(page => _restClient.GetAsync<ResponseAusencia>(ApiClientNames.Buk, $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100&page={page}"));
-        //     var pageResponses = await Task.WhenAll(pageTasks);
-        //     foreach (var pageResponse in pageResponses)
-        //     {
-        //         if (pageResponse?.Data == null)
-        //         {
-        //             continue;
-        //         }
-        //         ausencias.AddRange(pageResponse.Data.Where(ausencia => ausencia.Estado == "approved").Select(ausencia => ausencia.ToAusenciaDTO()));
-        //     }
-        // }
-        // catch (Exception e)
-        // {
-        //     Console.WriteLine("Error: " + e.GetBaseException().Message);
-        //     return ausencias;
-        // }
-        // await AsignarIDSIntelisis(ausencias);
-        // await _colaboradorRepository.RegistrarAusencias(ausencias);
-        return ausencias;
+            await AsignarIDSIntelisis(permisos);
+            await _colaboradorRepository.RegistrarAusencias(permisos, "Permiso");
+            return permisos;
+        
     }
 
 
+    public async Task<List<AusenciaDTO>> ObtenerAusencias(int diasAtras)
+    {
+
+        DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras));
+        Console.WriteLine($"Fecha consulta ausencias: {fechaConsulta}");
+        DateOnly fechaFinConsulta = DateOnly.FromDateTime(DateTime.Now);
+        var ausencias = new List<AusenciaDTO>();
+        var _ausencias = await _restClient.ObtenerPaginadoAsync<ResponseAusencia, AusenciaRest, AusenciaRest>(
+             ApiClientNames.Buk,
+             page => page == 1
+                 ? $"absences/absence?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100"
+                 : $"absences/absence?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100&page={page}",
+             response => response.Data,
+             response => response.Pagination?.TotalPages ?? 1,
+             ausencia => ausencia
+             );
+        ausencias = _ausencias
+        .Where(p => p.Estado == "approved")
+                             .Select(p => p.toAusenciaDTO())
+                             .ToList();
+
+        await AsignarIDSIntelisis(ausencias);
+        await _colaboradorRepository.RegistrarAusencias(ausencias, "Ausencia");
+        return ausencias;
+    }
 
 
     #region Métodos privados
@@ -365,3 +322,4 @@ public class ColaboradorService
     #endregion
 
 }
+

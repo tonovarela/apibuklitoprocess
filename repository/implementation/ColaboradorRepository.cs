@@ -413,7 +413,7 @@ public class ColaboradorRepository : IColaboradorRepository
 
     }
 
-    public async Task RegistrarAusencias(List<AusenciaDTO> ausencias)
+    public async Task RegistrarAusencias(List<AusenciaDTO> ausencias, string clasificacion)
     {
          if (ausencias.Count == 0)
         {
@@ -425,9 +425,9 @@ public class ColaboradorRepository : IColaboradorRepository
 
         const string sql = @"
         INSERT INTO Buk.dbo.Ausencias
-            (id_ausencia, id_colaborador,personal,justificacion, tipo, fecha, hora_inicio, hora_fin)
+            (id_ausencia, id_colaborador,personal,justificacion, tipo, fecha_inicio,fecha_fin, hora_inicio, hora_fin, clasificacion,dias, dias_percent,goce_sueldo)
         VALUES
-            (@IdAusencia, @IdColaborador, @Personal, @Justificacion, @Tipo, @Fecha, @HoraEntrada, @HoraSalida);";
+            (@IdAusencia, @IdColaborador, @Personal, @Justificacion, @Tipo, @FechaInicio, @FechaFin, @HoraEntrada, @HoraSalida, @Clasificacion, @Dias, @DiasProporcional, @ConGoceSueldo);";
 
         try
         {
@@ -436,11 +436,16 @@ public class ColaboradorRepository : IColaboradorRepository
             cmd.Parameters.Add("@IdAusencia", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@IdColaborador", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@Personal", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Justificacion", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Justificacion", SqlDbType.VarChar, 500);
             cmd.Parameters.Add("@Tipo", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Fecha", SqlDbType.DateTime);
+            cmd.Parameters.Add("@FechaInicio", SqlDbType.DateTime);
+            cmd.Parameters.Add("@FechaFin", SqlDbType.DateTime);
             cmd.Parameters.Add("@HoraEntrada", SqlDbType.Time);
-            cmd.Parameters.Add("@HoraSalida", SqlDbType.Time);       
+            cmd.Parameters.Add("@HoraSalida", SqlDbType.Time);
+            cmd.Parameters.Add("@Clasificacion", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Dias", SqlDbType.Float);
+            cmd.Parameters.Add("@DiasProporcional", SqlDbType.Float);
+            cmd.Parameters.Add("@ConGoceSueldo", SqlDbType.Bit);
             foreach (var s in ausencias)
             {
                 cmd.Parameters["@IdAusencia"].Value = s.id_Ausencia;
@@ -448,9 +453,14 @@ public class ColaboradorRepository : IColaboradorRepository
                 cmd.Parameters["@Personal"].Value = s.personal;
                 cmd.Parameters["@Justificacion"].Value = s.justificacion;
                 cmd.Parameters["@Tipo"].Value = s.tipo;
-                cmd.Parameters["@Fecha"].Value = DateTime.Parse(s.fecha);
+                cmd.Parameters["@FechaInicio"].Value = DateTime.Parse(s.fecha_inicio);
+                cmd.Parameters["@FechaFin"].Value = DateTime.Parse(s.fecha_fin);
+                cmd.Parameters["@Clasificacion"].Value = clasificacion;
                 cmd.Parameters["@HoraEntrada"].Value = string.IsNullOrEmpty(s.horaEntrada) ? (object)DBNull.Value : TimeSpan.Parse(s.horaEntrada);
                 cmd.Parameters["@HoraSalida"].Value = string.IsNullOrEmpty(s.horaSalida) ? (object)DBNull.Value : TimeSpan.Parse(s.horaSalida);
+                cmd.Parameters["@Dias"].Value = s.dias;
+                cmd.Parameters["@DiasProporcional"].Value = s.dias_proporcional;
+                cmd.Parameters["@ConGoceSueldo"].Value = s.ConGoceSueldo;
 
                 try
                 {

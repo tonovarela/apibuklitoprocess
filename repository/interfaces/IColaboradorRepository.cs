@@ -27,6 +27,6 @@ public Task<String> ObtenerEquivalenciaArea(long idAreaBuk);
 
  public Task RegistrarSolicitudesVacaciones(List<SolicitudDTO> solicitudes);
 
- public Task RegistrarAusencias(List<AusenciaDTO> ausencias);
+ public Task RegistrarAusencias(List<AusenciaDTO> ausencias,string clasificacion);
 
 }
