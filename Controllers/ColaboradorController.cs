@@ -80,6 +80,8 @@ public class ColaboradorController : ControllerBase
         {
             var permisos = await _colaboradorService.ObtenerPermisos(diasAtras);
             var ausencias = await _colaboradorService.ObtenerAusencias(diasAtras);
+            var incapacidades = await _colaboradorService.ObtenerIncapacidades(diasAtras);
+            
             return Ok(new
             {
                 success = true,
@@ -87,7 +89,8 @@ public class ColaboradorController : ControllerBase
                 data = new
                 {
                     permisos,
-                    ausencias
+                    ausencias,
+                    incapacidades
                 }
             });
         }

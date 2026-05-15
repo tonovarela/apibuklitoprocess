@@ -152,9 +152,34 @@ public class ColaboradorService
 
 
 
+  public async Task<List<AusenciaDTO>> ObtenerIncapacidades(int diasAtras)
+    {
+            DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras));
+            Console.WriteLine($"Fecha consulta incapacidades: {fechaConsulta}");
+            DateOnly fechaFinConsulta = DateOnly.FromDateTime(DateTime.Now);
+            var incapacidades = new List<AusenciaDTO>();
+            var _incapacidades = await _restClient.ObtenerPaginadoAsync<ResponseIncapacidad, IncapacidadRest, IncapacidadRest>(
+                 ApiClientNames.Buk,
+                 page => page == 1
+                     ? $"absences/licence?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100"
+                     : $"absences/licence?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100&page={page}",
+                 response => response.Data,
+                 response => response.Pagination?.TotalPages ?? 1,
+                 ausencia => ausencia
+                 );
+            incapacidades = _incapacidades
+            .Where(p => p.Estado == "approved")
+                                 .Select(p => p.toAusenciaDTO())
+                                 .ToList();
+
+            await AsignarIDSIntelisis(incapacidades);
+            await _colaboradorRepository.RegistrarAusencias(incapacidades, "Incapacidad");
+            return incapacidades;
+        
+    }
+
     public async Task<List<AusenciaDTO>> ObtenerPermisos(int diasAtras)
     {
-        
             DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras));
             Console.WriteLine($"Fecha consulta permisos: {fechaConsulta}");
             DateOnly fechaFinConsulta = DateOnly.FromDateTime(DateTime.Now);

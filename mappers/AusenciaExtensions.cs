@@ -6,6 +6,25 @@ namespace apiBukLitoprocess.mappers;
 
 public static class AusenciaExtensions
 {
+
+
+     public static AusenciaDTO toAusenciaDTO(this IncapacidadRest incapacidadRest)
+    {
+        return new AusenciaDTO
+        {
+            id_Ausencia = incapacidadRest.Id,            
+            id_colaborador = incapacidadRest.EmployeeId,
+            tipo = incapacidadRest.Tipo,
+            dias = incapacidadRest.dias,
+            dias_proporcional = incapacidadRest.dias_proporcional,
+            fecha_inicio= incapacidadRest.Fecha_inicio.ToString("yyyy-MM-dd"),
+            fecha_fin = incapacidadRest.Fecha_fin.ToString("yyyy-MM-dd"),
+            justificacion = incapacidadRest.Justificacion,
+            horaEntrada = null,
+            horaSalida = null ,
+            ConGoceSueldo = false        
+        };
+    }
     
     public static AusenciaDTO toAusenciaDTO(this AusenciaRest ausencia)
     {
