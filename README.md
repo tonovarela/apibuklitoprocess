@@ -44,4 +44,7 @@ Este proyecto es una API en ASP.NET Core para recibir webhooks relacionados con 
 Este proyecto es de uso educativo y puede ser modificado según tus necesidades.
 
 
+docker build --platform linux/amd64 -t user/apibuklitoprocess:3.0.0 -t user/apibuklitoprocess:latest . && docker push user/apibuklitoprocess:3.0.0 && docker push user/apibuklitoprocess:latest
+
+
 ngrok http 80
