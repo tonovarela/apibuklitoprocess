@@ -10,4 +10,7 @@ public class JornadaDTO
     public  required string Jornada { get; set; }
     public required string Turno { get; set; }
 
+    public string? Inicio { get; set; }
+    public  string? Fin { get; set; }
+
 }

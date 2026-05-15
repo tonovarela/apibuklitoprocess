@@ -78,10 +78,11 @@ public class ColaboradorController : ControllerBase
 
         try
         {
+
             var permisos = await _colaboradorService.ObtenerPermisos(diasAtras);
             var ausencias = await _colaboradorService.ObtenerAusencias(diasAtras);
             var incapacidades = await _colaboradorService.ObtenerIncapacidades(diasAtras);
-            
+
             return Ok(new
             {
                 success = true,
@@ -171,7 +172,12 @@ public class ColaboradorController : ControllerBase
     {
         if (diasAtras <= 0)
         {
-            diasAtras = -1;
+            diasAtras = 1;
+        }
+
+        if (diasAtras > 35)
+        {
+            diasAtras = 35;
         }
         try
         {

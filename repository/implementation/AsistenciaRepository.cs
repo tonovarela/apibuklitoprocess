@@ -1,6 +1,4 @@
-using System;
 using System.Data;
-using System.Net.Sockets;
 using apiBukLitoprocess.Data;
 using apiBukLitoprocess.DTOs;
 using apiBukLitoprocess.repository.interfaces;
@@ -29,28 +27,29 @@ public class AsistenciaRepository : IAsistenciaRepository
         using var tx = connection.BeginTransaction();
         const string sql = @"
             INSERT INTO Buk.dbo.Jornada
-                (id_jornada, rfc, fecha, jornada, turno)
+                (id_jornada, rfc, fecha, jornada, inicio, fin)
             VALUES
-                (@Id, @Rfc, @Fecha, @Jornada, @Turno);";
+                (@Id, @Rfc, @Fecha, @Jornada, @Inicio, @Fin);";
        
     
         try
         {
             using var cmd = new SqlCommand(sql, connection, tx);
-              cmd.Parameters.Add("@Id", SqlDbType.VarChar, 200);
+            cmd.Parameters.Add("@Id", SqlDbType.VarChar, 200);
             cmd.Parameters.Add("@Rfc", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@Fecha", SqlDbType.DateTime);
-            cmd.Parameters.Add("@Jornada", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Turno", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Jornada", SqlDbType.VarChar, 50);              
+            cmd.Parameters.Add("@Inicio", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Fin", SqlDbType.VarChar, 50);
 
             foreach (var a in jornadas)
             {
                 cmd.Parameters["@Id"].Value = a.Id_Jornada;
                 cmd.Parameters["@Rfc"].Value = a.RFC;
                 cmd.Parameters["@Fecha"].Value = a.Fecha;
-                cmd.Parameters["@Jornada"].Value = a.Jornada;
-                cmd.Parameters["@Turno"].Value = a.Turno;
-
+                cmd.Parameters["@Jornada"].Value = a.Jornada;            
+                cmd.Parameters["@Inicio"].Value = (object?)a.Inicio ?? DBNull.Value;
+                cmd.Parameters["@Fin"].Value = (object?)a.Fin ?? DBNull.Value;
                 try
                 {
                     await cmd.ExecuteNonQueryAsync();
