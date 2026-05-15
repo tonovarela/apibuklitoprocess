@@ -134,8 +134,8 @@ public class ColaboradorService
         var vacaciones=  await _restClient.ObtenerPaginadoAsync<ResponseVacaciones, VacacionesRest, VacacionesRest>(
             ApiClientNames.Buk,
             page => page == 1
-                ? $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved"
-                : $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved&page={page}",
+                ? $"vacations/requested?date={fechaConsulta:yyyy-MM-dd}&page_size=100&status=approved"
+                : $"vacations/requested?date={fechaConsulta:yyyy-MM-dd}&page_size=100&status=approved&page={page}",
             response => response.Data,
             response => response.pagination?.TotalPages ?? 1,
             vacaciones => vacaciones
@@ -191,12 +191,12 @@ public class ColaboradorService
         DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-200));
         Console.WriteLine($"Fecha consulta ausencias: {fechaConsulta}");
         DateOnly fechaFinConsulta = DateOnly.FromDateTime(DateTime.Now);
-        var ausencias = new List<AusenciaDTO>();
+         var ausencias = new List<AusenciaDTO>();
        var _ausencias= await _restClient.ObtenerPaginadoAsync<ResponseAusencia, AusenciaRest, AusenciaRest>(
             ApiClientNames.Buk,
             page => page == 1
-                ? $"absences/permission?from={fechaConsulta:dd-MM-yyyy}&to={fechaFinConsulta:dd-MM-yyyy}&page_size=100"
-                : $"absences/permission?from={fechaConsulta:dd-MM-yyyy}&to={fechaFinConsulta:dd-MM-yyyy}&page_size=100&page={page}",
+                ? $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100"
+                : $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100&page={page}",
             response => response.Data,
             response => response.Pagination?.TotalPages ?? 1,
             ausencia => ausencia

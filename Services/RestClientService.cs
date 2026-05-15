@@ -2,8 +2,7 @@ using System.Text.Json;
 namespace apiBukLitoprocess.Clases;
 
 public class RestClientService
-{
-    
+{    
     private readonly IHttpClientFactory _httpClientFactory;
     public RestClientService(IHttpClientFactory httpClientFactory)
     {
@@ -19,13 +18,13 @@ public class RestClientService
         return JsonSerializer.Deserialize<T>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
     
- public async Task<TResponse?> PostAsync<TRequest, TResponse>(string clientName, string url, TRequest data)
-    {
-        var client = _httpClientFactory.CreateClient(clientName);
-        var response = await client.PostAsJsonAsync(url, data);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<TResponse>();
-    }
+//  public async Task<TResponse?> PostAsync<TRequest, TResponse>(string clientName, string url, TRequest data)
+//     {
+//         var client = _httpClientFactory.CreateClient(clientName);
+//         var response = await client.PostAsJsonAsync(url, data);
+//         response.EnsureSuccessStatusCode();
+//         return await response.Content.ReadFromJsonAsync<TResponse>();
+//     }
 
     public async Task PatchAsync<TRequest>(string clientName, string url, TRequest data)
     {
