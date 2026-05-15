@@ -152,5 +152,33 @@ public class ColaboradorController : ControllerBase
 
 
 
+   [HttpGet("jornadas")] 
+   public async Task<IActionResult> GetJornadas([FromQuery] int diasAtras = 1)
+    {
+        if (diasAtras <= 0)
+        {
+            diasAtras = -1;
+        }
+        try
+        {
+            var jornadas = await _asistenciaService.registroJornada(DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras*(-1))));
+            return Ok(new
+            {
+                success = true,
+                statusCode = 200,
+                data = jornadas
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.GetBaseException().Message);
+            return StatusCode(500, new
+            {
+                success = false,
+                statusCode = 500,
+                message = "Internal server error"
+            });
+        }
+    }
 
 }

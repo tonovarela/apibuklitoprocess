@@ -1,5 +1,3 @@
-
-using System.Linq.Expressions;
 using System.Net;
 using System.Text.Json;
 using apiBukLitoprocess.Clases;
@@ -9,11 +7,7 @@ using apiBukLitoprocess.mappers;
 using apiBukLitoprocess.repository.interfaces;
 using apiBukLitoprocess.responseApi;
 
-
 namespace apiBukLitoprocess.Services;
-
-
-
 
 public record GetColaboradorResult(bool IsError, int StatusCode, string? ErrorMessage, ColaboradorDTO? colaborador)
 {
@@ -26,21 +20,17 @@ public class ColaboradorService
     private readonly RestClientService _restClient;
     private readonly IColaboradorRepository _colaboradorRepository;
 
-
     private readonly HashSet<string> EventosValidos = new(StringComparer.OrdinalIgnoreCase){
         "employee_update",
         "job_hire",
         "job_termination",
         "job_movement"
         };
-
-
     public ColaboradorService(RestClientService restClient, IColaboradorRepository colaboradorRepository)
     {
         _restClient = restClient;
         _colaboradorRepository = colaboradorRepository;
     }
-
 
 
     public async Task<GetColaboradorResult> handleEventWebhook(WebhookPayloadBody bodyPayload)
@@ -141,39 +131,55 @@ public class ColaboradorService
     {
         DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-20));
         var solicitudes = new List<SolicitudDTO>();
-        try
-        {
-            var firstPageResponse = await _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved");
-            if (firstPageResponse?.Data == null)
-            {
-                return solicitudes;
-            }
-            solicitudes.AddRange(firstPageResponse.Data.Where(vacaciones => vacaciones.PuedeMapearseASolicitud()).Select(vacaciones => vacaciones.toSolicitudDTO()));
-            long totalPages = firstPageResponse.pagination?.TotalPages ?? 1;
-            if (totalPages <= 1)
-            {
-                await AsignarIDSIntelisis(solicitudes);
-                await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
-                return solicitudes;
-            }
-            var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved&page={page}"));
-            var pageResponses = await Task.WhenAll(pageTasks);
-            foreach (var pageResponse in pageResponses)
-            {
-                if (pageResponse?.Data == null)
-                {
-                    continue;
-                }
-                solicitudes.AddRange(pageResponse.Data.Where(vacaciones => vacaciones.PuedeMapearseASolicitud()).Select(vacaciones => vacaciones.toSolicitudDTO()));
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Error: " + e.GetBaseException().Message);
-            return solicitudes;
-        }
+        var vacaciones=  await _restClient.ObtenerPaginadoAsync<ResponseVacaciones, VacacionesRest, VacacionesRest>(
+            ApiClientNames.Buk,
+            page => page == 1
+                ? $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved"
+                : $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved&page={page}",
+            response => response.Data,
+            response => response.pagination?.TotalPages ?? 1,
+            vacaciones => vacaciones
+            );
+
+        solicitudes = vacaciones.Where(vacaciones => vacaciones.PuedeMapearseASolicitud())
+                                .Select(vacaciones => vacaciones.toSolicitudDTO())
+                                .ToList();
+
         await AsignarIDSIntelisis(solicitudes);
         await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
+        // try
+        // {
+        //     var firstPageResponse = await _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved");
+        //     if (firstPageResponse?.Data == null)
+        //     {
+        //         return solicitudes;
+        //     }
+        //     solicitudes.AddRange(firstPageResponse.Data.Where(vacaciones => vacaciones.PuedeMapearseASolicitud()).Select(vacaciones => vacaciones.toSolicitudDTO()));
+        //     long totalPages = firstPageResponse.pagination?.TotalPages ?? 1;
+        //     if (totalPages <= 1)
+        //     {
+        //         await AsignarIDSIntelisis(solicitudes);
+        //         await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
+        //         return solicitudes;
+        //     }
+        //     var pageTasks = Enumerable.Range(2, (int)totalPages - 1).Select(page => _restClient.GetAsync<ResponseVacaciones>(ApiClientNames.Buk, $"vacations/requested?date={fechaConsulta:dd-MM-yyyy}&page_size=100&status=approved&page={page}"));
+        //     var pageResponses = await Task.WhenAll(pageTasks);
+        //     foreach (var pageResponse in pageResponses)
+        //     {
+        //         if (pageResponse?.Data == null)
+        //         {
+        //             continue;
+        //         }
+        //         solicitudes.AddRange(pageResponse.Data.Where(vacaciones => vacaciones.PuedeMapearseASolicitud()).Select(vacaciones => vacaciones.toSolicitudDTO()));
+        //     }
+        // }
+        // catch (Exception e)
+        // {
+        //     Console.WriteLine("Error: " + e.GetBaseException().Message);
+        //     return solicitudes;
+        // }
+        // await AsignarIDSIntelisis(solicitudes);
+        // await _colaboradorRepository.RegistrarSolicitudesVacaciones(solicitudes);
 
         return solicitudes;
     }
@@ -186,40 +192,58 @@ public class ColaboradorService
         Console.WriteLine($"Fecha consulta ausencias: {fechaConsulta}");
         DateOnly fechaFinConsulta = DateOnly.FromDateTime(DateTime.Now);
         var ausencias = new List<AusenciaDTO>();
-        try
-        {
-            var firstPageResponse = await _restClient.GetAsync<ResponseAusencia>(ApiClientNames.Buk, $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100");
-            if (firstPageResponse?.Data == null)
-            {
-                return ausencias;
-            }
-            ausencias.AddRange(firstPageResponse.Data.Where(ausencia => ausencia.Estado == "approved").Select(ausencia => ausencia.ToAusenciaDTO()));
-            long totalPages = firstPageResponse.Pagination?.TotalPages ?? 1;
-            if (totalPages <= 1)
-            {
-                await AsignarIDSIntelisis(ausencias);
-                await _colaboradorRepository.RegistrarAusencias(ausencias);
-                return ausencias;
-            }
-            var pageTasks = Enumerable.Range(2, (int)totalPages - 1)
-                                      .Select(page => _restClient.GetAsync<ResponseAusencia>(ApiClientNames.Buk, $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100&page={page}"));
-            var pageResponses = await Task.WhenAll(pageTasks);
-            foreach (var pageResponse in pageResponses)
-            {
-                if (pageResponse?.Data == null)
-                {
-                    continue;
-                }
-                ausencias.AddRange(pageResponse.Data.Where(ausencia => ausencia.Estado == "approved").Select(ausencia => ausencia.ToAusenciaDTO()));
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Error: " + e.GetBaseException().Message);
-            return ausencias;
-        }
+       var _ausencias= await _restClient.ObtenerPaginadoAsync<ResponseAusencia, AusenciaRest, AusenciaRest>(
+            ApiClientNames.Buk,
+            page => page == 1
+                ? $"absences/permission?from={fechaConsulta:dd-MM-yyyy}&to={fechaFinConsulta:dd-MM-yyyy}&page_size=100"
+                : $"absences/permission?from={fechaConsulta:dd-MM-yyyy}&to={fechaFinConsulta:dd-MM-yyyy}&page_size=100&page={page}",
+            response => response.Data,
+            response => response.Pagination?.TotalPages ?? 1,
+            ausencia => ausencia
+            );
+           
+           ausencias = _ausencias.Where(ausencia => ausencia.Estado == "approved")
+                                .Select(ausencia => ausencia.ToAusenciaDTO())
+                                .ToList();
+
         await AsignarIDSIntelisis(ausencias);
         await _colaboradorRepository.RegistrarAusencias(ausencias);
+           
+
+        // try
+        // {
+        //     var firstPageResponse = await _restClient.GetAsync<ResponseAusencia>(ApiClientNames.Buk, $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100");
+        //     if (firstPageResponse?.Data == null)
+        //     {
+        //         return ausencias;
+        //     }
+        //     ausencias.AddRange(firstPageResponse.Data.Where(ausencia => ausencia.Estado == "approved").Select(ausencia => ausencia.ToAusenciaDTO()));
+        //     long totalPages = firstPageResponse.Pagination?.TotalPages ?? 1;
+        //     if (totalPages <= 1)
+        //     {
+        //         await AsignarIDSIntelisis(ausencias);
+        //         await _colaboradorRepository.RegistrarAusencias(ausencias);
+        //         return ausencias;
+        //     }
+        //     var pageTasks = Enumerable.Range(2, (int)totalPages - 1)
+        //                               .Select(page => _restClient.GetAsync<ResponseAusencia>(ApiClientNames.Buk, $"absences/permission?from={fechaConsulta:yyyy-MM-dd}&to={fechaFinConsulta:yyyy-MM-dd}&page_size=100&page={page}"));
+        //     var pageResponses = await Task.WhenAll(pageTasks);
+        //     foreach (var pageResponse in pageResponses)
+        //     {
+        //         if (pageResponse?.Data == null)
+        //         {
+        //             continue;
+        //         }
+        //         ausencias.AddRange(pageResponse.Data.Where(ausencia => ausencia.Estado == "approved").Select(ausencia => ausencia.ToAusenciaDTO()));
+        //     }
+        // }
+        // catch (Exception e)
+        // {
+        //     Console.WriteLine("Error: " + e.GetBaseException().Message);
+        //     return ausencias;
+        // }
+        // await AsignarIDSIntelisis(ausencias);
+        // await _colaboradorRepository.RegistrarAusencias(ausencias);
         return ausencias;
     }
 
@@ -264,11 +288,6 @@ public class ColaboradorService
             throw new InvalidOperationException("Colaborador ya existe en la base de datos");
 
         await RegistrarSiNoExisteAsync(colaborador);
-
-
-
-
-
 
         await _restClient.PatchAsync(ApiClientNames.Buk, $"employees/{idEmployeeBuk}", new
         {

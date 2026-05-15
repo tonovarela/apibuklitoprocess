@@ -7,6 +7,8 @@ public interface IAsistenciaRepository
 {
 
   public Task InsertarLoteChecadasIgnorandoDuplicados(List<ChecadaDTO> checadaDTOs);
+
+  public Task InsertarJornadasIgnorandoDuplicados(List<JornadaDTO> jornadas);
     
 
 }
