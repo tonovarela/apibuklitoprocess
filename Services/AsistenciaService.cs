@@ -42,6 +42,9 @@ public class AsistenciaService
     {
         List<ColaboradorDTO> colaboradores = await ObtenerColaboradoresActivos();
         List<ChecadaDTO> checadaDTOs = new List<ChecadaDTO>();
+        //bool existeJessica = colaboradores.Any(c => c.RFC.Contains("MOGJ820117T24", StringComparison.OrdinalIgnoreCase));
+        //Console.WriteLine($"¿Existe Jessica? {existeJessica}");
+        Console.WriteLine($"Obtenidos {colaboradores.Count} colaboradores activos para procesar checadas.");
         List<string> ListRFC = colaboradores.Select(c => c.RFC).ToList();
         Console.WriteLine($"Total colaboradores activos: {ListRFC.Count}");
         foreach (var rfc in ListRFC)

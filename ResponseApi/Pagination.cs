@@ -14,10 +14,8 @@ public class Pagination
     [JsonPropertyName("count")]
     public int Count { get; set; }
 
-    [JsonPropertyName("page")]
-    public int Page { get; set; }
-
-    [JsonPropertyName("totalPages")]
+    
+    [JsonPropertyName("total_pages")]
     public int TotalPages { get; set; }
 
 }
