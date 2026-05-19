@@ -41,9 +41,7 @@ public class AsistenciaService
     public async Task<List<ChecadaDTO>> RegistroChecadas(DateOnly desde)
     {
         List<ColaboradorDTO> colaboradores = await ObtenerColaboradoresActivos();
-        List<ChecadaDTO> checadaDTOs = new List<ChecadaDTO>();
-        //bool existeJessica = colaboradores.Any(c => c.RFC.Contains("MOGJ820117T24", StringComparison.OrdinalIgnoreCase));
-        //Console.WriteLine($"¿Existe Jessica? {existeJessica}");
+        List<ChecadaDTO> checadaDTOs = new List<ChecadaDTO>();        
         Console.WriteLine($"Obtenidos {colaboradores.Count} colaboradores activos para procesar checadas.");
         List<string> ListRFC = colaboradores.Select(c => c.RFC).ToList();
         Console.WriteLine($"Total colaboradores activos: {ListRFC.Count}");
