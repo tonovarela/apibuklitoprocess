@@ -453,8 +453,8 @@ public class ColaboradorRepository : IColaboradorRepository
                 cmd.Parameters["@Personal"].Value = s.personal;
                 cmd.Parameters["@Justificacion"].Value = s.justificacion;
                 cmd.Parameters["@Tipo"].Value = s.tipo;
-                cmd.Parameters["@FechaInicio"].Value = DateTime.Parse(s.fecha_inicio);
-                cmd.Parameters["@FechaFin"].Value = DateTime.Parse(s.fecha_fin);
+                cmd.Parameters["@FechaInicio"].Value = DateTime.Parse(s.fecha_inicio, new System.Globalization.CultureInfo("es-MX"));
+                cmd.Parameters["@FechaFin"].Value = DateTime.Parse(s.fecha_fin, new System.Globalization.CultureInfo("es-MX"));
                 cmd.Parameters["@Clasificacion"].Value = clasificacion;
                 cmd.Parameters["@HoraEntrada"].Value = string.IsNullOrEmpty(s.horaEntrada) ? (object)DBNull.Value : TimeSpan.Parse(s.horaEntrada);
                 cmd.Parameters["@HoraSalida"].Value = string.IsNullOrEmpty(s.horaSalida) ? (object)DBNull.Value : TimeSpan.Parse(s.horaSalida);

@@ -20,7 +20,7 @@ public  static class JornadaExtensions
         {
             Id_Jornada = HashGenerator.Generate(rawId),
             RFC = responseJornada.RFC,
-            Fecha = DateTime.Parse(responseJornada.DiaTurno).Date,
+            Fecha = DateTime.Parse(responseJornada.DiaTurno, new System.Globalization.CultureInfo("es-MX")).Date,
             Jornada = responseJornada.NombreTurno,
             Turno = responseJornada.HorarioTurno,
             Inicio = inicio,
@@ -31,7 +31,7 @@ public  static class JornadaExtensions
     public static JornadaDTO toJornadaDTO( this AsistenciaRest asistenciaRest )
     {
 
-        string rawId = $"{asistenciaRest.Rfc}-{asistenciaRest.Entrada}-{DateTime.Parse(asistenciaRest.Entrada).ToString("yyyyMMdd")}";
+        string rawId = $"{asistenciaRest.Rfc}-{asistenciaRest.Entrada}-{DateTime.Parse(asistenciaRest.Entrada, new System.Globalization.CultureInfo("es-MX")).ToString("yyyyMMdd")}";
         var partesTurno = asistenciaRest.Turno.Split('-', 2, StringSplitOptions.TrimEntries);
         var inicio = partesTurno.Length == 2 ? partesTurno[0] : null;
         var fin = partesTurno.Length == 2 ? partesTurno[1] : null;
@@ -39,7 +39,7 @@ public  static class JornadaExtensions
         {
             Id_Jornada = HashGenerator.Generate(rawId),
             RFC = asistenciaRest.Rfc,
-            Fecha = DateTime.Parse(asistenciaRest.Entrada).Date,
+            Fecha = DateTime.Parse(asistenciaRest.Entrada, new System.Globalization.CultureInfo("es-MX")).Date,
             Jornada = asistenciaRest.Jornada,
             Turno = asistenciaRest.Turno,
             Inicio = inicio,
