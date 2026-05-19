@@ -24,7 +24,8 @@ public  static class JornadaExtensions
             Jornada = responseJornada.NombreTurno,
             Turno = responseJornada.HorarioTurno,
             Inicio = inicio,
-            Fin = fin
+            Fin = fin,
+            Descanso = responseJornada.Vacaciones ? "Vacaciones" : responseJornada.Permiso ? "Permiso" : responseJornada.Licencia ? "Licencia" : "N/A"
         };
         
     }
@@ -43,7 +44,8 @@ public  static class JornadaExtensions
             Jornada = asistenciaRest.Jornada,
             Turno = asistenciaRest.Turno,
             Inicio = inicio,
-            Fin = fin
+            Fin = fin,
+            Descanso = "N/A"
 
         };
     }

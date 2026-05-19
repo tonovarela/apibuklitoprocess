@@ -41,7 +41,12 @@ public class AsistenciaService
         }
         
     }       
-    var jornadasDTOList = todasLasJornadas.Select(j => j.toJornadaDTO()).ToList();
+    //var descansos = todasLasJornadas.Where(j => j.Vacaciones || j.Permiso || j.Licencia);
+    //descansos.ToList().ForEach(d => Console.WriteLine($"Jornada con descanso: RFC={d.RFC}, Fecha={d.DiaTurno}, Tipo de descanso={(d.Vacaciones ? "Vacaciones" : d.Permiso ? "Permiso" : "Licencia")}"));
+
+
+    //Console.WriteLine($"Obtenidas {todasLasJornadas.Count} jornadas para el período del {desde} al {hasta}. ¿Incluyen descansos? {(descansos.Any() ? "Sí" : "No")}");
+     var jornadasDTOList = todasLasJornadas.Select(j => j.toJornadaDTO()).ToList();
      await _asistenciaRepository.InsertarJornadasIgnorandoDuplicados(jornadasDTOList);
     return jornadasDTOList;
         

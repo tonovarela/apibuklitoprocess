@@ -13,4 +13,6 @@ public class JornadaDTO
     public string? Inicio { get; set; }
     public  string? Fin { get; set; }
 
+    public required string Descanso { get; set; }
+
 }

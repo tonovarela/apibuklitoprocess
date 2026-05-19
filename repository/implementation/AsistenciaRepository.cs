@@ -27,9 +27,9 @@ public class AsistenciaRepository : IAsistenciaRepository
         using var tx = connection.BeginTransaction();
         const string sql = @"
             INSERT INTO Buk.dbo.Jornada
-                (id_jornada, rfc, fecha, jornada, inicio, fin)
+                (id_jornada, rfc, fecha, jornada, inicio, fin, descanso)
             VALUES
-                (@Id, @Rfc, @Fecha, @Jornada, @Inicio, @Fin);";
+                (@Id, @Rfc, @Fecha, @Jornada, @Inicio, @Fin, @Descanso);";
        
     
         try
@@ -41,6 +41,7 @@ public class AsistenciaRepository : IAsistenciaRepository
             cmd.Parameters.Add("@Jornada", SqlDbType.VarChar, 50);              
             cmd.Parameters.Add("@Inicio", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@Fin", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Descanso", SqlDbType.VarChar, 50);            
 
             foreach (var a in jornadas)
             {
@@ -50,13 +51,14 @@ public class AsistenciaRepository : IAsistenciaRepository
                 cmd.Parameters["@Jornada"].Value = a.Jornada;            
                 cmd.Parameters["@Inicio"].Value = (object?)a.Inicio ?? DBNull.Value;
                 cmd.Parameters["@Fin"].Value = (object?)a.Fin ?? DBNull.Value;
+                cmd.Parameters["@Descanso"].Value = a.Descanso;
                 try
                 {
                     await cmd.ExecuteNonQueryAsync();
                 }
                 catch (SqlException ex)
                 {
-                    //Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.Message);
                     // Duplicate key (PK/Unique). Ignorar.
                 }
             }
