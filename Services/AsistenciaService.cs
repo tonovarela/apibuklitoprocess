@@ -27,7 +27,7 @@ public class AsistenciaService
     bool hayMasResultados = true;
     while (hayMasResultados)
     {        
-        string url = $"getAsignacionTurnos?token=e25710cb-6215-4577-8bf1-ef15878dd3fc&desde={desde:dd-MM-yyyy}&hasta={hasta:dd-MM-yyyy}&page_size=50&page={page}";        
+        string url = $"getAsignacionTurnos?token=e25710cb-6215-4577-8bf1-ef15878dd3fc&desde={desde:dd-MM-yyyy}&hasta={hasta:dd-MM-yyyy}&page_size=500&page={page}";        
         var jornadasPagina = await _restClient.GetAsync<List<ResponseJornada>>(ApiClientNames.Asistencia, url);            
         
         if (jornadasPagina == null || jornadasPagina.Count == 0)

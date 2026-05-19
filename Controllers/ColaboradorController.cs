@@ -174,16 +174,14 @@ public class ColaboradorController : ControllerBase
         {
             diasAtras = 1;
         }
-
-        
+     DateOnly desde = DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras * (-1)));
         try
         {
-            var jornadas = await _asistenciaService.registroJornada(DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras * (-1))));
-            Console.WriteLine($"Obtenidas {jornadas.Count} jornadas para los últimos {diasAtras} días.");
+            var jornadas = await _asistenciaService.registroJornada(desde);
             return Ok(new
             {
-                success = true,
-                statusCode = 200,
+                fecha = new { inicio =desde,fin = DateOnly.FromDateTime(DateTime.Now) },
+                total=jornadas.Count,
                 data = jornadas
             });
         }
