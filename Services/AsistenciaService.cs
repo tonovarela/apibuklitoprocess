@@ -40,8 +40,7 @@ public class AsistenciaService
             page++;
         }
         
-    }   
-    Console.WriteLine($"Obtenidas {todasLasJornadas.Count} jornadas desde {desde} hasta {hasta} ,paginas procesadas: {page - 1}"); 
+    }       
     var jornadasDTOList = todasLasJornadas.Select(j => j.toJornadaDTO()).ToList();
      await _asistenciaRepository.InsertarJornadasIgnorandoDuplicados(jornadasDTOList);
     return jornadasDTOList;
