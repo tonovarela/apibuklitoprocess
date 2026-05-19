@@ -17,24 +17,35 @@ public class AsistenciaService
     }
 
 
-    public async Task<List<JornadaDTO>> registroJornada(DateOnly desde)
+
+   public async Task<List<JornadaDTO>> registroJornada(DateOnly desde)
     {
-
-        var jornadas = await _restClient.ObtenerPaginadoAsync<ResponseAsistencia, AsistenciaRest, JornadaDTO>(
-            ApiClientNames.Asistencia,
-            page => page == 1
-                ? $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page_size=100"
-                : $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page_size=100&page={page}",
-            response => response.Data,
-            response => response.Pagination?.TotalPages ?? 1,
-            asistencia => asistencia.toJornadaDTO()
-            );
-
-        var jornadasUnicas = jornadas.GroupBy(x => new { x.RFC, Fecha = x.Fecha.Date })
-                       .Select(g => g.First())
-                       .ToList();
-        await _asistenciaRepository.InsertarJornadasIgnorandoDuplicados(jornadasUnicas);              
-        return jornadasUnicas;
+    DateOnly hasta = DateOnly.FromDateTime(DateTime.Now);
+    
+    var todasLasJornadas = new List<ResponseJornada>();
+    int page = 1;
+    bool hayMasResultados = true;
+    while (hayMasResultados)
+    {        
+        string url = $"getAsignacionTurnos?token=e25710cb-6215-4577-8bf1-ef15878dd3fc&desde={desde:dd-MM-yyyy}&hasta={hasta:dd-MM-yyyy}&page_size=50&page={page}";        
+        var jornadasPagina = await _restClient.GetAsync<List<ResponseJornada>>(ApiClientNames.Asistencia, url);            
+        
+        if (jornadasPagina == null || jornadasPagina.Count == 0)
+        {
+            hayMasResultados = false;
+        }
+        else
+        {            
+            todasLasJornadas.AddRange(jornadasPagina);    
+            page++;
+        }
+        
+    }   
+    Console.WriteLine($"Obtenidas {todasLasJornadas.Count} jornadas desde {desde} hasta {hasta} ,paginas procesadas: {page - 1}"); 
+    var jornadasDTOList = todasLasJornadas.Select(j => j.toJornadaDTO()).ToList();
+     await _asistenciaRepository.InsertarJornadasIgnorandoDuplicados(jornadasDTOList);
+    return jornadasDTOList;
+        
     }
 
     public async Task<List<ChecadaDTO>> RegistroChecadas(DateOnly desde)

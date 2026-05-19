@@ -175,13 +175,11 @@ public class ColaboradorController : ControllerBase
             diasAtras = 1;
         }
 
-        if (diasAtras > 35)
-        {
-            diasAtras = 35;
-        }
+        
         try
         {
             var jornadas = await _asistenciaService.registroJornada(DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras * (-1))));
+            Console.WriteLine($"Obtenidas {jornadas.Count} jornadas para los últimos {diasAtras} días.");
             return Ok(new
             {
                 success = true,
