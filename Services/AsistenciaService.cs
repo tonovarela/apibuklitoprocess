@@ -10,7 +10,6 @@ public class AsistenciaService
 {
     private readonly RestClientService _restClient;
     private readonly IAsistenciaRepository _asistenciaRepository;
-
     public AsistenciaService(RestClientService restClient, IAsistenciaRepository asistenciaRepository)
     {
         _restClient = restClient;
@@ -53,8 +52,7 @@ public class AsistenciaService
                 if (checadasColaborador.Count > 0)
                 {
                     EventLogger.Info($"Obtenidas {checadasColaborador.Count} checadas para RFC {rfc}");
-                    checadaDTOs.AddRange(checadasColaborador);
-                    
+                    checadaDTOs.AddRange(checadasColaborador);                    
                 }
             }
             catch (Exception e)
@@ -62,7 +60,6 @@ public class AsistenciaService
                 Console.WriteLine($"Error al obtener checadas para RFC {rfc}: {e.GetBaseException().Message}");
             }
         }
-
         await _asistenciaRepository.InsertarLoteChecadasIgnorandoDuplicados(checadaDTOs);
         return checadaDTOs;
     }
