@@ -4,14 +4,14 @@ namespace apiBukLitoprocess.responseApi;
 
 public class Pagination
 {
-    [JsonPropertyName("next")]
-    public Uri? Next { get; set; }
+    // [JsonPropertyName("next")]
+    // public Uri? Next { get; set; }
 
-    [JsonPropertyName("previous")]
-    public Uri? Previous { get; set; }
+    // [JsonPropertyName("previous")]
+    // public Uri? Previous { get; set; }
 
-    [JsonPropertyName("count")]
-    public int Count { get; set; }
+    // [JsonPropertyName("count")]
+    // public int Count { get; set; }
 
     
     [JsonPropertyName("total_pages")]

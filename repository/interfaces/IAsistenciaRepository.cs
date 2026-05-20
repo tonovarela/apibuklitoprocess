@@ -11,4 +11,6 @@ public interface IAsistenciaRepository
   public Task InsertarJornadasIgnorandoDuplicados(List<JornadaDTO> jornadas);
     
 
+  public Task InsertarAsistenciasIgnorandoDuplicados(List<AsistenciaDTO> asistencias);
+
 }

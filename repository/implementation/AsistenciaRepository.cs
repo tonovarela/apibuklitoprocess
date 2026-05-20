@@ -16,12 +16,65 @@ public class AsistenciaRepository : IAsistenciaRepository
         _dbConnectionFactory = dbConnectionFactory;
     }
 
+    public async Task InsertarAsistenciasIgnorandoDuplicados(List<AsistenciaDTO> asistencias)
+    {
+        Console.WriteLine("Iniciando inserción de asistencias en la base de datos...");
+        if (asistencias is null || asistencias.Count == 0) return;
+
+        using var connection = (SqlConnection)_dbConnectionFactory.CreateConnection();
+        using var tx = connection.BeginTransaction();        
+        const string sql = @"
+        INSERT INTO Buk.dbo.Asistencias
+            (id, rfc, dia, turno_noche, turno, entrada, salida, codigo_turno)
+        VALUES
+            (@IdAsistencia, @Rfc, @Dia, @TurnoNoche, @Turno, @Entrada, @Salida, @CodigoTurno);";
+        try
+        {
+            using var cmd = new SqlCommand(sql, connection, tx);
+            cmd.Parameters.Add("@IdAsistencia", SqlDbType.BigInt);
+            cmd.Parameters.Add("@Rfc", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Dia", SqlDbType.DateTime);
+            
+            cmd.Parameters.Add("@Turno", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Entrada", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@Salida", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@CodigoTurno", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add("@TurnoNoche", SqlDbType.Bit);
+            foreach (var a in asistencias)
+            {
+                cmd.Parameters["@IdAsistencia"].Value = a.id_asistencia;
+                cmd.Parameters["@Rfc"].Value = a.rfc;
+                cmd.Parameters["@Dia"].Value = a.dia;                
+                cmd.Parameters["@Turno"].Value = a.turno;
+                cmd.Parameters["@Entrada"].Value = a.entrada;
+                cmd.Parameters["@Salida"].Value = a.salida;
+                cmd.Parameters["@CodigoTurno"].Value = a.codigo_turno;
+                cmd.Parameters["@TurnoNoche"].Value = a.turno_noche;
+                try
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    // Duplicate key (PK/Unique). Ignorar.
+                }
+            }
+            tx.Commit();
+        }
+        catch
+        {
+            Console.WriteLine("Error durante la inserción de asistencias. Realizando rollback.");
+            tx.Rollback();
+            //throw;
+        }
+    }
+
     public async Task InsertarJornadasIgnorandoDuplicados(List<JornadaDTO> jornadas)
     {
-
-        Console.WriteLine("Iniciando inserción de jornadas en la base de datos...");
-        if (jornadas is null || jornadas.Count == 0) 
-        return;
+        
+        if (jornadas is null || jornadas.Count == 0)
+            return;
 
         using var connection = (SqlConnection)_dbConnectionFactory.CreateConnection();
         using var tx = connection.BeginTransaction();
@@ -30,25 +83,25 @@ public class AsistenciaRepository : IAsistenciaRepository
                 (id_jornada, rfc, fecha, jornada, inicio, fin, descanso)
             VALUES
                 (@Id, @Rfc, @Fecha, @Jornada, @Inicio, @Fin, @Descanso);";
-       
-    
+
+
         try
         {
             using var cmd = new SqlCommand(sql, connection, tx);
             cmd.Parameters.Add("@Id", SqlDbType.VarChar, 200);
             cmd.Parameters.Add("@Rfc", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@Fecha", SqlDbType.DateTime);
-            cmd.Parameters.Add("@Jornada", SqlDbType.VarChar, 50);              
+            cmd.Parameters.Add("@Jornada", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@Inicio", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@Fin", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Descanso", SqlDbType.VarChar, 50);            
+            cmd.Parameters.Add("@Descanso", SqlDbType.VarChar, 50);
 
             foreach (var a in jornadas)
             {
                 cmd.Parameters["@Id"].Value = a.Id_Jornada;
                 cmd.Parameters["@Rfc"].Value = a.RFC;
                 cmd.Parameters["@Fecha"].Value = a.Fecha;
-                cmd.Parameters["@Jornada"].Value = a.Jornada;            
+                cmd.Parameters["@Jornada"].Value = a.Jornada;
                 cmd.Parameters["@Inicio"].Value = (object?)a.Inicio ?? DBNull.Value;
                 cmd.Parameters["@Fin"].Value = (object?)a.Fin ?? DBNull.Value;
                 cmd.Parameters["@Descanso"].Value = a.Descanso;

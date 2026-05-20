@@ -4,15 +4,15 @@ namespace apiBukLitoprocess.DTOs;
 
 public class AsistenciaDTO
 {
-    public long IdChecada { get; set; }
-    public required string RFC { get; set; }
-    public required string Nombre { get; set; }
-    public required string Entrada { get; set; }
-    public required string Salida { get; set; }
-    public DateOnly Dia { get; set; }
-    public bool TurnoNoche { get; set; }    
-    public long TrabajadorId { get; set; }
-    public  required string Turno { get; set; }   
-    public required string CodigoTurno { get; set; }
+    public long id_asistencia { get; set; }
+    public required string rfc{ get; set; }
+    //public required string Nombre { get; set; }
+     public required string entrada { get; set; }
+     public required string salida { get; set; }
+    public DateTime dia { get; set; }
+    public bool turno_noche { get; set; }    
+    // public long TrabajadorId { get; set; }
+    public  required string turno { get; set; }   
+    public required string codigo_turno { get; set; }
 
 }

@@ -18,6 +18,26 @@ public class AsistenciaService
 
 
 
+
+  public async Task<List<AsistenciaDTO>> ObtenerAsistencias(DateOnly desde)
+    {
+        DateOnly hasta = DateOnly.FromDateTime(DateTime.Now);
+        var asistencias = new List<AsistenciaDTO>();
+         asistencias =await _restClient.ObtenerPaginadoAsync<ResponseAsistencia, AsistenciaRest, AsistenciaDTO>(
+            ApiClientNames.Asistencia,
+            page => page == 1
+                ? $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page_size=100"
+                : $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page={page}&page_size=100",
+            response => response.Data,
+            response => response.Pagination?.TotalPages ?? 1,
+            asistencias => asistencias.ToAsistenciaDTO()
+            );
+        await _asistenciaRepository.InsertarAsistenciasIgnorandoDuplicados(asistencias);
+            return asistencias;        
+        
+    }
+
+
    public async Task<List<JornadaDTO>> registroJornada(DateOnly desde)
     {
     DateOnly hasta = DateOnly.FromDateTime(DateTime.Now);
@@ -38,14 +58,8 @@ public class AsistenciaService
         {            
             todasLasJornadas.AddRange(jornadasPagina);    
             page++;
-        }
-        
-    }       
-    //var descansos = todasLasJornadas.Where(j => j.Vacaciones || j.Permiso || j.Licencia);
-    //descansos.ToList().ForEach(d => Console.WriteLine($"Jornada con descanso: RFC={d.RFC}, Fecha={d.DiaTurno}, Tipo de descanso={(d.Vacaciones ? "Vacaciones" : d.Permiso ? "Permiso" : "Licencia")}"));
-
-
-    //Console.WriteLine($"Obtenidas {todasLasJornadas.Count} jornadas para el período del {desde} al {hasta}. ¿Incluyen descansos? {(descansos.Any() ? "Sí" : "No")}");
+        }        
+    }           
      var jornadasDTOList = todasLasJornadas.Select(j => j.toJornadaDTO()).ToList();
      await _asistenciaRepository.InsertarJornadasIgnorandoDuplicados(jornadasDTOList);
     return jornadasDTOList;
@@ -56,9 +70,9 @@ public class AsistenciaService
     {
         List<ColaboradorDTO> colaboradores = await ObtenerColaboradoresActivos();
         List<ChecadaDTO> checadaDTOs = new List<ChecadaDTO>();        
-        Console.WriteLine($"Obtenidos {colaboradores.Count} colaboradores activos para procesar checadas.");
+        //Console.WriteLine($"Obtenidos {colaboradores.Count} colaboradores activos para procesar checadas.");
         List<string> ListRFC = colaboradores.Select(c => c.RFC).ToList();
-        Console.WriteLine($"Total colaboradores activos: {ListRFC.Count}");
+        //Console.WriteLine($"Total colaboradores activos: {ListRFC.Count}");
         foreach (var rfc in ListRFC)
         {
             try

@@ -21,17 +21,19 @@ public class AsistenciaRest
     [JsonPropertyName("rut_trabajador")]
     public required string Rfc { get; set; }
 
-    [JsonPropertyName("entrada_format")]
-    public required string Entrada { get; set; }  
+    // [JsonPropertyName("entrada_format")]
+    // public required string Entrada { get; set; }  
 
-    [JsonPropertyName("salida_format")]
-    public required string Salida { get; set; }  
-
-    [JsonPropertyName("codigo_turno")]
-    public required string Jornada { get; set; }
+    // [JsonPropertyName("salida_format")]
+    // public required string Salida { get; set; }      
 
     [JsonPropertyName("turno")]
     public required string Turno { get; set; }
 
+   [JsonPropertyName("dia_entrada")]
+    public required string Dia { get; set; }    
+
+    [JsonPropertyName("codigo_turno")]
+    public required string CodigoTurno { get; set; }
     
 }
