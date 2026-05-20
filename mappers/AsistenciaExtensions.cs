@@ -16,7 +16,7 @@ namespace apiBukLitoprocess.mappers
             {
                 id_asistencia= asistenciaRest.Id,
                 rfc= asistenciaRest.Rfc,                
-                dia = DateTime.Parse(asistenciaRest.Dia),
+                dia =  DateTime.Parse(asistenciaRest.Dia, new System.Globalization.CultureInfo("es-MX")).Date,                
                 turno_noche = asistenciaRest.Turno.ToLower().Contains("noche"),
                 turno = asistenciaRest.Turno,
                 entrada=inicio ?? "",
