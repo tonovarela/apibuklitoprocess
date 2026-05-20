@@ -29,10 +29,10 @@ public class AsistenciaService
                 ? $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page_size=100"
                 : $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page={page}&page_size=100",
             response => response.Data,
-            response => response.Pagination?.TotalPages ?? 1,
+            response => response.Pagination?.totalPages ?? 1,
             asistencias => asistencias.ToAsistenciaDTO()
             );
-        await _asistenciaRepository.InsertarAsistenciasIgnorandoDuplicados(asistencias);
+        //await _asistenciaRepository.InsertarAsistenciasIgnorandoDuplicados(asistencias);
             return asistencias;        
         
     }
@@ -120,7 +120,7 @@ public class AsistenciaService
                     ? $"obtenerRegistroAsistencia?obra_id=36915&from={desde:dd-MM-yyyy}&to={today:dd-MM-yyyy}&dni_colaborador={RFC}&page_size=100"
                     : $"obtenerRegistroAsistencia?obra_id=36915&from={desde:dd-MM-yyyy}&to={today:dd-MM-yyyy}&dni_colaborador={RFC}&page_size=100&page={page}",
                 response => response.Data,
-                response => response.Pagination?.TotalPages ?? 1,
+                response => response.Pagination?.totalPages ?? 1,
                 checada => checada.ToChecadaDTO());
         }
         catch (Exception e)
