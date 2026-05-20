@@ -32,7 +32,7 @@ public class AsistenciaService
             response => response.Pagination?.totalPages ?? 1,
             asistencias => asistencias.ToAsistenciaDTO()
             );
-        //await _asistenciaRepository.InsertarAsistenciasIgnorandoDuplicados(asistencias);
+        await _asistenciaRepository.InsertarAsistenciasIgnorandoDuplicados(asistencias);
             return asistencias;        
         
     }
