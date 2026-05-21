@@ -25,7 +25,7 @@ public class AsistenciaRepository : IAsistenciaRepository
         using var tx = connection.BeginTransaction();        
         const string sql = @"
         INSERT INTO Buk.dbo.Jornada
-            (id, rfc, fecha, turno_noche, turno, inicio, fin, codigo_turno)
+            (id, rfc, fecha, turno_noche, turno, inicio, fin, jornada)
         VALUES
             (@IdAsistencia, @Rfc, @Dia, @TurnoNoche, @Turno, @Entrada, @Salida, @CodigoTurno);";
         try
