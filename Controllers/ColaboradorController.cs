@@ -165,38 +165,38 @@ public class ColaboradorController : ControllerBase
     }
 
 
-    [HttpGet("jornadas")]
-    public async Task<IActionResult> GetJornadas([FromQuery] int diasAtras = 1)
-    {
-        if (diasAtras <= 0)
-        {
-            diasAtras = 1;
-        }
-     DateOnly desde = DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras * (-1)));
-        try
-        {
-            var jornadas = await _asistenciaService.registroJornada(desde);
-            return Ok(new
-            {
-                fecha = new { inicio =desde,fin = DateOnly.FromDateTime(DateTime.Now) },
-                total=jornadas.Count,
-                data = jornadas
-            });
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.GetBaseException().Message);
-            return StatusCode(500, new
-            {
-                success = false,
-                statusCode = 500,
-                message = "Internal server error"
-            });
-        }
-    }
+    // [HttpGet("jornadas")]
+    // public async Task<IActionResult> GetJornadas([FromQuery] int diasAtras = 1)
+    // {
+    //     if (diasAtras <= 0)
+    //     {
+    //         diasAtras = 1;
+    //     }
+    //  DateOnly desde = DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras * (-1)));
+    //     try
+    //     {
+    //         var jornadas = await _asistenciaService.registroJornada(desde);
+    //         return Ok(new
+    //         {
+    //             fecha = new { inicio =desde,fin = DateOnly.FromDateTime(DateTime.Now) },
+    //             total=jornadas.Count,
+    //             data = jornadas
+    //         });
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e.GetBaseException().Message);
+    //         return StatusCode(500, new
+    //         {
+    //             success = false,
+    //             statusCode = 500,
+    //             message = "Internal server error"
+    //         });
+    //     }
+    // }
 
     
-    [HttpGet("asistencias")]
+    [HttpGet("jornadas")]
     public async Task<IActionResult> GetAsistencias([FromQuery] int diasAtras = 1)
     {
         if (diasAtras <= 0)

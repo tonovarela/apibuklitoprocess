@@ -24,8 +24,8 @@ public class AsistenciaRepository : IAsistenciaRepository
         using var connection = (SqlConnection)_dbConnectionFactory.CreateConnection();
         using var tx = connection.BeginTransaction();        
         const string sql = @"
-        INSERT INTO Buk.dbo.Asistencias
-            (id, rfc, dia, turno_noche, turno, entrada, salida, codigo_turno)
+        INSERT INTO Buk.dbo.Jornada
+            (id, rfc, dia, turno_noche, turno, inicio, fin, codigo_turno)
         VALUES
             (@IdAsistencia, @Rfc, @Dia, @TurnoNoche, @Turno, @Entrada, @Salida, @CodigoTurno);";
         try
@@ -70,60 +70,62 @@ public class AsistenciaRepository : IAsistenciaRepository
         }
     }
 
+
+//En desuso, se mantiene para referencia futura en caso de necesitar insertar jornadas sin generar checadas
     public async Task InsertarJornadasIgnorandoDuplicados(List<JornadaDTO> jornadas)
     {
         
-        if (jornadas is null || jornadas.Count == 0)
-            return;
+        // if (jornadas is null || jornadas.Count == 0)
+        //     return;
 
-        using var connection = (SqlConnection)_dbConnectionFactory.CreateConnection();
-        using var tx = connection.BeginTransaction();
-        const string sql = @"
-            INSERT INTO Buk.dbo.Jornada
-                (id_jornada, rfc, fecha, jornada, inicio, fin, descanso)
-            VALUES
-                (@Id, @Rfc, @Fecha, @Jornada, @Inicio, @Fin, @Descanso);";
+        // using var connection = (SqlConnection)_dbConnectionFactory.CreateConnection();
+        // using var tx = connection.BeginTransaction();
+        // const string sql = @"
+        //     INSERT INTO Buk.dbo.Jornada
+        //         (id_jornada, rfc, fecha, jornada, inicio, fin, descanso)
+        //     VALUES
+        //         (@Id, @Rfc, @Fecha, @Jornada, @Inicio, @Fin, @Descanso);";
 
 
-        try
-        {
-            using var cmd = new SqlCommand(sql, connection, tx);
-            cmd.Parameters.Add("@Id", SqlDbType.VarChar, 200);
-            cmd.Parameters.Add("@Rfc", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Fecha", SqlDbType.DateTime);
-            cmd.Parameters.Add("@Jornada", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Inicio", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Fin", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Descanso", SqlDbType.VarChar, 50);
+        // try
+        // {
+        //     using var cmd = new SqlCommand(sql, connection, tx);
+        //     cmd.Parameters.Add("@Id", SqlDbType.VarChar, 200);
+        //     cmd.Parameters.Add("@Rfc", SqlDbType.VarChar, 50);
+        //     cmd.Parameters.Add("@Fecha", SqlDbType.DateTime);
+        //     cmd.Parameters.Add("@Jornada", SqlDbType.VarChar, 50);
+        //     cmd.Parameters.Add("@Inicio", SqlDbType.VarChar, 50);
+        //     cmd.Parameters.Add("@Fin", SqlDbType.VarChar, 50);
+        //     cmd.Parameters.Add("@Descanso", SqlDbType.VarChar, 50);
 
-            foreach (var a in jornadas)
-            {
-                cmd.Parameters["@Id"].Value = a.Id_Jornada;
-                cmd.Parameters["@Rfc"].Value = a.RFC;
-                cmd.Parameters["@Fecha"].Value = a.Fecha;
-                cmd.Parameters["@Jornada"].Value = a.Jornada;
-                cmd.Parameters["@Inicio"].Value = (object?)a.Inicio ?? DBNull.Value;
-                cmd.Parameters["@Fin"].Value = (object?)a.Fin ?? DBNull.Value;
-                cmd.Parameters["@Descanso"].Value = a.Descanso;
-                try
-                {
-                    await cmd.ExecuteNonQueryAsync();
-                }
-                catch (SqlException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    // Duplicate key (PK/Unique). Ignorar.
-                }
-            }
+        //     foreach (var a in jornadas)
+        //     {
+        //         cmd.Parameters["@Id"].Value = a.Id_Jornada;
+        //         cmd.Parameters["@Rfc"].Value = a.RFC;
+        //         cmd.Parameters["@Fecha"].Value = a.Fecha;
+        //         cmd.Parameters["@Jornada"].Value = a.Jornada;
+        //         cmd.Parameters["@Inicio"].Value = (object?)a.Inicio ?? DBNull.Value;
+        //         cmd.Parameters["@Fin"].Value = (object?)a.Fin ?? DBNull.Value;
+        //         cmd.Parameters["@Descanso"].Value = a.Descanso;
+        //         try
+        //         {
+        //             await cmd.ExecuteNonQueryAsync();
+        //         }
+        //         catch (SqlException ex)
+        //         {
+        //             Console.WriteLine(ex.Message);
+        //             // Duplicate key (PK/Unique). Ignorar.
+        //         }
+        //     }
 
-            tx.Commit();
-        }
-        catch
-        {
-            Console.WriteLine("Error durante la inserción de asistencias. Realizando rollback.");
-            tx.Rollback();
-            //throw;
-        }
+        //     tx.Commit();
+        // }
+        // catch
+        // {
+        //     Console.WriteLine("Error durante la inserción de asistencias. Realizando rollback.");
+        //     tx.Rollback();
+        //     //throw;
+        // }
     }
 
     public async Task InsertarLoteChecadasIgnorandoDuplicados(List<ChecadaDTO> checadaDTOs)
