@@ -45,10 +45,10 @@ public class AsistenciaRepository : IAsistenciaRepository
                 cmd.Parameters["@IdAsistencia"].Value = a.id_asistencia;
                 cmd.Parameters["@Rfc"].Value = a.rfc;
                 cmd.Parameters["@Dia"].Value = a.dia;                
-                cmd.Parameters["@Turno"].Value = a.turno =="-" && a.codigo_turno!="Base-36915"?a.turno:"D";
+                cmd.Parameters["@Turno"].Value = a.turno;
                 cmd.Parameters["@Entrada"].Value = a.entrada;
                 cmd.Parameters["@Salida"].Value = a.salida;
-                cmd.Parameters["@CodigoTurno"].Value = a.codigo_turno;
+                cmd.Parameters["@CodigoTurno"].Value = a.turno =="-"  &&  a.codigo_turno!="Base-36915"?"D":a.codigo_turno;
                 cmd.Parameters["@TurnoNoche"].Value = a.turno_noche;
                 try
                 {
