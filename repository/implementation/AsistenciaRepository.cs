@@ -45,7 +45,7 @@ public class AsistenciaRepository : IAsistenciaRepository
                 cmd.Parameters["@IdAsistencia"].Value = a.id_asistencia;
                 cmd.Parameters["@Rfc"].Value = a.rfc;
                 cmd.Parameters["@Dia"].Value = a.dia;                
-                cmd.Parameters["@Turno"].Value = a.turno;
+                cmd.Parameters["@Turno"].Value = a.turno =="-" && a.codigo_turno!="Base-36915"?a.turno:"D";
                 cmd.Parameters["@Entrada"].Value = a.entrada;
                 cmd.Parameters["@Salida"].Value = a.salida;
                 cmd.Parameters["@CodigoTurno"].Value = a.codigo_turno;
@@ -81,7 +81,7 @@ public class AsistenciaRepository : IAsistenciaRepository
         // using var connection = (SqlConnection)_dbConnectionFactory.CreateConnection();
         // using var tx = connection.BeginTransaction();
         // const string sql = @"
-        //     INSERT INTO Buk.dbo.Jornada
+        //     INSERT INTO Buk.dbo.JornadaTMP
         //         (id_jornada, rfc, fecha, jornada, inicio, fin, descanso)
         //     VALUES
         //         (@Id, @Rfc, @Fecha, @Jornada, @Inicio, @Fin, @Descanso);";
