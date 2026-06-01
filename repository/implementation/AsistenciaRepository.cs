@@ -1,4 +1,5 @@
 using System.Data;
+using System.Runtime.CompilerServices;
 using apiBukLitoprocess.Data;
 using apiBukLitoprocess.DTOs;
 using apiBukLitoprocess.repository.interfaces;
@@ -14,6 +15,15 @@ public class AsistenciaRepository : IAsistenciaRepository
     public AsistenciaRepository(DbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public async Task EliminarAsistenciasDesdeFecha(DateOnly fecha)
+    {
+        Console.WriteLine($"Eliminando asistencias desde la fecha: { fecha.ToString("yyyy-MM-dd")}");
+        using var connection = (SqlConnection)_dbConnectionFactory.CreateConnection();
+        string sql = $" DELETE FROM Buk.dbo.Jornada WHERE fecha >= '{ fecha.ToString("yyyy-MM-dd")}';";        
+        using var cmd = new SqlCommand(sql, connection);        
+        await  cmd.ExecuteNonQueryAsync();
     }
 
     public async Task InsertarAsistenciasIgnorandoDuplicados(List<AsistenciaDTO> asistencias)
@@ -56,7 +66,7 @@ public class AsistenciaRepository : IAsistenciaRepository
                 }
                 catch (SqlException ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    //Console.WriteLine(ex.Message);
                     // Duplicate key (PK/Unique). Ignorar.
                 }
             }
@@ -72,8 +82,8 @@ public class AsistenciaRepository : IAsistenciaRepository
 
 
 //En desuso, se mantiene para referencia futura en caso de necesitar insertar jornadas sin generar checadas
-    public async Task InsertarJornadasIgnorandoDuplicados(List<JornadaDTO> jornadas)
-    {
+    //public async Task InsertarJornadasIgnorandoDuplicados(List<JornadaDTO> jornadas)
+    //{
         
         // if (jornadas is null || jornadas.Count == 0)
         //     return;
@@ -126,7 +136,7 @@ public class AsistenciaRepository : IAsistenciaRepository
         //     tx.Rollback();
         //     //throw;
         // }
-    }
+    //}
 
     public async Task InsertarLoteChecadasIgnorandoDuplicados(List<ChecadaDTO> checadaDTOs)
     {

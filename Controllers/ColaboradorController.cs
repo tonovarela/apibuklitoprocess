@@ -2,6 +2,7 @@
 using apiBukLitoprocess.Clases;
 using Microsoft.AspNetCore.Mvc;
 using apiBukLitoprocess.Services;
+using Microsoft.Identity.Client;
 
 namespace apiBukLitoprocess.Controllers;
 
@@ -197,15 +198,17 @@ public class ColaboradorController : ControllerBase
 
     
     [HttpGet("jornadas")]
-    public async Task<IActionResult> GetAsistencias([FromQuery] int diasAtras = 1)
+    public async Task<IActionResult> GetAsistencias([FromQuery] int diasAtras = 20)
     {
         if (diasAtras <= 0)
         {
-            diasAtras = 1;
+            diasAtras = 20;
         }
      DateOnly desde = DateOnly.FromDateTime(DateTime.Now.AddDays(diasAtras * (-1)));
+     DateOnly fechaEliminacion = DateOnly.FromDateTime(DateTime.Now.AddDays(15 * (-1)));
         try
         {
+            await _asistenciaService.EliminarAsistenciasDesde(fechaEliminacion);
             var asistencias = await _asistenciaService.ObtenerAsistencias(desde);
             return Ok(new
             {

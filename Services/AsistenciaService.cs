@@ -19,57 +19,63 @@ public class AsistenciaService
 
 
 
-  public async Task<List<AsistenciaDTO>> ObtenerAsistencias(DateOnly desde)
+    public async Task EliminarAsistenciasDesde(DateOnly desde)
+    {
+        await _asistenciaRepository.EliminarAsistenciasDesdeFecha(desde);
+    }
+
+
+    public async Task<List<AsistenciaDTO>> ObtenerAsistencias(DateOnly desde)
     {
         DateOnly hasta = DateOnly.FromDateTime(DateTime.Now);
         var asistencias = new List<AsistenciaDTO>();
-         asistencias =await _restClient.ObtenerPaginadoAsync<ResponseAsistencia, AsistenciaRest, AsistenciaDTO>(
-            ApiClientNames.Asistencia,
-            page => page == 1
-                ? $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page_size=100"
-                : $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page={page}&page_size=100",
-            response => response.Data,
-            response => response.Pagination?.totalPages ?? 1,
-            asistencias => asistencias.ToAsistenciaDTO()
-            );
+        asistencias = await _restClient.ObtenerPaginadoAsync<ResponseAsistencia, AsistenciaRest, AsistenciaDTO>(
+           ApiClientNames.Asistencia,
+           page => page == 1
+               ? $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page_size=100"
+               : $"v2/asistencia-empresa?desde={desde:dd-MM-yyyy}&page={page}&page_size=100",
+           response => response.Data,
+           response => response.Pagination?.totalPages ?? 1,
+           asistencias => asistencias.ToAsistenciaDTO()
+           );
         await _asistenciaRepository.InsertarAsistenciasIgnorandoDuplicados(asistencias);
-            return asistencias;        
-        
+        return asistencias;
+
     }
 
 
-   public async Task<List<JornadaDTO>> registroJornada(DateOnly desde)
-    {
-    DateOnly hasta = DateOnly.FromDateTime(DateTime.Now);
-    
-    var todasLasJornadas = new List<ResponseJornada>();
-    int page = 1;
-    bool hayMasResultados = true;
-    while (hayMasResultados)
-    {        
-        string url = $"getAsignacionTurnos?token=e25710cb-6215-4577-8bf1-ef15878dd3fc&desde={desde:dd-MM-yyyy}&hasta={hasta:dd-MM-yyyy}&page_size=500&page={page}";        
-        var jornadasPagina = await _restClient.GetAsync<List<ResponseJornada>>(ApiClientNames.Asistencia, url);            
-        
-        if (jornadasPagina == null || jornadasPagina.Count == 0)
-        {
-            hayMasResultados = false;
-        }
-        else
-        {            
-            todasLasJornadas.AddRange(jornadasPagina);    
-            page++;
-        }        
-    }           
-     var jornadasDTOList = todasLasJornadas.Select(j => j.toJornadaDTO()).ToList();
-     await _asistenciaRepository.InsertarJornadasIgnorandoDuplicados(jornadasDTOList);
-    return jornadasDTOList;
-        
-    }
+    // public async Task<List<JornadaDTO>> registroJornada(DateOnly desde)
+    // {
+    //     DateOnly hasta = DateOnly.FromDateTime(DateTime.Now);
+
+    //     var todasLasJornadas = new List<ResponseJornada>();
+    //     int page = 1;
+    //     bool hayMasResultados = true;
+    //     while (hayMasResultados)
+    //     {
+    //         string url = $"getAsignacionTurnos?token=e25710cb-6215-4577-8bf1-ef15878dd3fc&desde={desde:dd-MM-yyyy}&hasta={hasta:dd-MM-yyyy}&page_size=500&page={page}";
+    //         var jornadasPagina = await _restClient.GetAsync<List<ResponseJornada>>(ApiClientNames.Asistencia, url);
+
+    //         if (jornadasPagina == null || jornadasPagina.Count == 0)
+    //         {
+    //             hayMasResultados = false;
+    //         }
+    //         else
+    //         {
+    //             todasLasJornadas.AddRange(jornadasPagina);
+    //             page++;
+    //         }
+    //     }
+    //     var jornadasDTOList = todasLasJornadas.Select(j => j.toJornadaDTO()).ToList();
+    //     await _asistenciaRepository.InsertarJornadasIgnorandoDuplicados(jornadasDTOList);
+    //     return jornadasDTOList;
+
+    // }
 
     public async Task<List<ChecadaDTO>> RegistroChecadas(DateOnly desde)
     {
         List<ColaboradorDTO> colaboradores = await ObtenerColaboradoresActivos();
-        List<ChecadaDTO> checadaDTOs = new List<ChecadaDTO>();        
+        List<ChecadaDTO> checadaDTOs = new List<ChecadaDTO>();
         //Console.WriteLine($"Obtenidos {colaboradores.Count} colaboradores activos para procesar checadas.");
         List<string> ListRFC = colaboradores.Select(c => c.RFC).ToList();
         //Console.WriteLine($"Total colaboradores activos: {ListRFC.Count}");
@@ -81,7 +87,7 @@ public class AsistenciaService
                 if (checadasColaborador.Count > 0)
                 {
                     EventLogger.Info($"Obtenidas {checadasColaborador.Count} checadas para RFC {rfc}");
-                    checadaDTOs.AddRange(checadasColaborador);                    
+                    checadaDTOs.AddRange(checadasColaborador);
                 }
             }
             catch (Exception e)
