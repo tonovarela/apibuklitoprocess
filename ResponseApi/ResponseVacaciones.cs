@@ -30,15 +30,15 @@ public partial class VacacionesRest
     public DateTimeOffset? approved_at { get; set; }
 
     [JsonPropertyName("working_days")]
-    [JsonConverter(typeof(FlexibleNullableLongConverter))]
-    public long? working_days { get; set; }
+    [JsonConverter(typeof(FlexibleNullableDoubleConverter))]
+    public double? working_days { get; set; }
 
-    [JsonPropertyName("calendar_days")]
-    [JsonConverter(typeof(FlexibleNullableLongConverter))]
-    public long? calendar_days { get; set; }
+    // [JsonPropertyName("calendar_days")]
+    // [JsonConverter(typeof(FlexibleNullableLongConverter))]
+    // public long? calendar_days { get; set; }
 
-    [JsonPropertyName("workday_stage")]
-    public string? workday_stage { get; set; }
+    // [JsonPropertyName("workday_stage")]
+    // public string? workday_stage { get; set; }
 
     [JsonPropertyName("start_date")]
     public DateOnly? start_date { get; set; }
@@ -46,17 +46,17 @@ public partial class VacacionesRest
     [JsonPropertyName("end_date")]
     public DateOnly? end_date { get; set; }
 
-    [JsonPropertyName("type")]
-    public string? type { get; set; }
+    // [JsonPropertyName("type")]
+    // public string? type { get; set; }
 
     [JsonPropertyName("requested_at")]
     public DateTimeOffset? requested_at { get; set; }
 
-    [JsonPropertyName("status")]
-    public string? status { get; set; }
+    // [JsonPropertyName("status")]
+    // public string? status { get; set; }
 
-    [JsonPropertyName("vacation_type_id")]
-    [JsonConverter(typeof(FlexibleNullableLongConverter))]
-    public long? vacation_type_id { get; set; }
+    // [JsonPropertyName("vacation_type_id")]
+    // [JsonConverter(typeof(FlexibleNullableLongConverter))]
+    // public long? vacation_type_id { get; set; }
 }
 

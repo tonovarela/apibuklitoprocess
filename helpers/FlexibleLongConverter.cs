@@ -76,3 +76,28 @@ public sealed class FlexibleNullableLongConverter : JsonConverter<long?>
         writer.WriteNullValue();
     }
 }
+
+public sealed class FlexibleNullableDoubleConverter : JsonConverter<double?>
+{
+    public override double? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.Null)
+        {
+            return null;
+        }
+
+        var converter = new FlexibleLongConverter();
+        return converter.Read(ref reader, typeof(long), options);
+    }
+
+    public override void Write(Utf8JsonWriter writer, double? value, JsonSerializerOptions options)
+    {
+        if (value.HasValue)
+        {
+            writer.WriteNumberValue(value.Value);
+            return;
+        }
+
+        writer.WriteNullValue();
+    }
+}

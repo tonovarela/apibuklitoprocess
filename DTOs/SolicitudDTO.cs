@@ -15,7 +15,7 @@ public class SolicitudDTO
   public DateTime fechaAutorizacion { get; set; }
   public long id_autorizo { get; set; }
 
-  public long diasHabiles { get; set; }
+  public double diasHabiles { get; set; }
   
 }
 

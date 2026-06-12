@@ -66,7 +66,7 @@ public class AsistenciaRepository : IAsistenciaRepository
                 }
                 catch (SqlException ex)
                 {
-                    //Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.Message);
                     // Duplicate key (PK/Unique). Ignorar.
                 }
             }

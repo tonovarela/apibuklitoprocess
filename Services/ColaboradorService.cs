@@ -131,6 +131,7 @@ public class ColaboradorService
     {
         DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-20));
         var solicitudes = new List<SolicitudDTO>();
+        Console.WriteLine($"Vacaciones obtenidas: Antes");
         var vacaciones = await _restClient.ObtenerPaginadoAsync<ResponseVacaciones, VacacionesRest, VacacionesRest>(
             ApiClientNames.Buk,
             page => page == 1
@@ -140,6 +141,7 @@ public class ColaboradorService
             response => response.pagination?.TotalPages ?? 1,
             vacaciones => vacaciones
             );
+            Console.WriteLine($"Vacaciones obtenidas: {vacaciones.Count}");
 
         solicitudes = vacaciones.Where(vacaciones => vacaciones.PuedeMapearseASolicitud())
                                 .Select(vacaciones => vacaciones.toSolicitudDTO())
