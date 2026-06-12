@@ -86,8 +86,29 @@ public sealed class FlexibleNullableDoubleConverter : JsonConverter<double?>
             return null;
         }
 
-        var converter = new FlexibleLongConverter();
-        return converter.Read(ref reader, typeof(long), options);
+        if (reader.TokenType == JsonTokenType.Number)
+        {
+            if (reader.TryGetDouble(out var value))
+            {
+                return value;
+            }
+        }
+
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var stringValue = reader.GetString();
+            if (string.IsNullOrWhiteSpace(stringValue))
+            {
+                return 0.0;
+            }
+
+            if (double.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var doubleValue))
+            {
+                return doubleValue;
+            }
+        }
+
+        throw new JsonException("No se pudo convertir el valor JSON a Double.");
     }
 
     public override void Write(Utf8JsonWriter writer, double? value, JsonSerializerOptions options)

@@ -238,31 +238,51 @@ public class ColaboradorService
 
     private async Task AsignarIDSIntelisis(List<SolicitudDTO> solicitudes)
     {
+        var distinctIds = solicitudes.Select(s => s.id_colaborador).Distinct().ToList();
+        var cache = new Dictionary<long, string>();
+
+        var tasks = distinctIds.Select(async id => 
+        {
+            var response = await GetColaboradorByIdBuk(id);
+            var personalId = response?.colaborador?.IdColaborador ?? String.Empty;
+            return new { id, personalId };
+        });
+
+        var results = await Task.WhenAll(tasks);
+        foreach (var r in results)
+        {
+            cache[r.id] = r.personalId;
+        }
 
         foreach (var solicitud in solicitudes)
         {
-            var colaboradorResponse = await GetColaboradorByIdBuk(solicitud.id_colaborador);
-            if (colaboradorResponse is not null)
-            {
-                solicitud.personal = colaboradorResponse!.colaborador?.IdColaborador ?? String.Empty;
-            }
+            solicitud.personal = cache.GetValueOrDefault(solicitud.id_colaborador, String.Empty);
         }
-
     }
 
 
     private async Task AsignarIDSIntelisis(List<AusenciaDTO> solicitudes)
     {
+        var distinctIds = solicitudes.Select(s => s.id_colaborador).Distinct().ToList();
+        var cache = new Dictionary<long, string>();
+
+        var tasks = distinctIds.Select(async id => 
+        {
+            var response = await GetColaboradorByIdBuk(id);
+            var personalId = response?.colaborador?.IdColaborador ?? String.Empty;
+            return new { id, personalId };
+        });
+
+        var results = await Task.WhenAll(tasks);
+        foreach (var r in results)
+        {
+            cache[r.id] = r.personalId;
+        }
 
         foreach (var solicitud in solicitudes)
         {
-            var colaboradorResponse = await GetColaboradorByIdBuk(solicitud.id_colaborador);
-            if (colaboradorResponse is not null)
-            {
-                solicitud.personal = colaboradorResponse!.colaborador?.IdColaborador ?? String.Empty;
-            }
+            solicitud.personal = cache.GetValueOrDefault(solicitud.id_colaborador, String.Empty);
         }
-
     }
 
     private async Task ProcesarJobHireAsync(long idEmployeeBuk, ColaboradorDTO colaborador)
