@@ -129,7 +129,7 @@ public class ColaboradorService
 
     public async Task<List<SolicitudDTO>> ObtenerSolicitudesVacaciones()
     {
-        DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-20));
+        DateOnly fechaConsulta = DateOnly.FromDateTime(DateTime.Now.AddDays(-50));
         var solicitudes = new List<SolicitudDTO>();
         Console.WriteLine($"Vacaciones obtenidas: Antes");
         var vacaciones = await _restClient.ObtenerPaginadoAsync<ResponseVacaciones, VacacionesRest, VacacionesRest>(

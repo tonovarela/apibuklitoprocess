@@ -34,8 +34,8 @@ public partial class VacacionesRest
     public double? working_days { get; set; }
 
     // [JsonPropertyName("calendar_days")]
-    // [JsonConverter(typeof(FlexibleNullableLongConverter))]
-    // public long? calendar_days { get; set; }
+    // [JsonConverter(typeof(FlexibleNullableDoubleConverter))]
+    // public double? calendar_days { get; set; }
 
     // [JsonPropertyName("workday_stage")]
     // public string? workday_stage { get; set; }

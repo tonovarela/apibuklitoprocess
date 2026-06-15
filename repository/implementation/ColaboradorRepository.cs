@@ -376,7 +376,7 @@ public class ColaboradorRepository : IColaboradorRepository
             cmd.Parameters.Add("@IdSolicitud", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@IdColaborador", SqlDbType.VarChar, 50);
             cmd.Parameters.Add("@Personal", SqlDbType.VarChar, 50);
-            cmd.Parameters.Add("@Dias", SqlDbType.Int);
+            cmd.Parameters.Add("@Dias", SqlDbType.Float);
             cmd.Parameters.Add("@FechaSolicitud", SqlDbType.DateTime);
             cmd.Parameters.Add("@FechaInicio", SqlDbType.DateTime);
             cmd.Parameters.Add("@FechaFin", SqlDbType.DateTime);
@@ -388,7 +388,7 @@ public class ColaboradorRepository : IColaboradorRepository
                 cmd.Parameters["@IdColaborador"].Value = s.id_colaborador;
                 cmd.Parameters["@Personal"].Value = s.personal;
                 cmd.Parameters["@Dias"].Value = s.diasHabiles;
-                cmd.Parameters["@FechaSolicitud"].Value = s.fechaSolicitud;
+                cmd.Parameters["@FechaSolicitud"].Value = s.fechaSolicitud ?? (object)DBNull.Value;
                 cmd.Parameters["@FechaInicio"].Value = s.fechaInicio;
                 cmd.Parameters["@FechaFin"].Value = s.fechaFin;
                 cmd.Parameters["@FechaAutorizacion"].Value = s.fechaAutorizacion;

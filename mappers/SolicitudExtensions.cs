@@ -15,13 +15,13 @@ public static class SolicitudExtensions
 
  public static SolicitudDTO toSolicitudDTO(this VacacionesRest vacaciones)
     {
-        var fechaSolicitud = vacaciones.requested_at.HasValue
+        DateTime? fechaSolicitud = vacaciones.requested_at.HasValue
             ? NormalizarFechaSql(vacaciones.requested_at.Value.DateTime)
-            : SqlDateTime.MinValue.Value;
+            : null;
 
-        var fechaAutorizacion = vacaciones.approved_at.HasValue
+        DateTime? fechaAutorizacion = vacaciones.approved_at.HasValue
             ? NormalizarFechaSql(vacaciones.approved_at.Value.DateTime)
-            : SqlDateTime.MinValue.Value;
+            : null;
 
         var fechaInicio = NormalizarFechaSql(vacaciones.start_date!.Value.ToDateTime(new TimeOnly(0, 0)));
         var fechaFin = NormalizarFechaSql(vacaciones.end_date!.Value.ToDateTime(new TimeOnly(0, 0)));
@@ -35,7 +35,7 @@ public static class SolicitudExtensions
             fechaSolicitud = fechaSolicitud,
             fechaInicio = fechaInicio,
             fechaFin = fechaFin,
-            diasHabiles = Math.Max(vacaciones.working_days ?? 0, 0),
+            diasHabiles = vacaciones.working_days ?? 0,
             id_autorizo = vacaciones.approved_by_id ?? 0
         };
     }

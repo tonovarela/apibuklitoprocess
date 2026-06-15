@@ -9,13 +9,13 @@ public class SolicitudDTO
 
   public string personal { get; set; } = string.Empty;
   public TipoSolicitud tipo { get; set; } 
-  public DateTime fechaSolicitud    { get; set; }
+  public DateTime? fechaSolicitud    { get; set; }
   public DateTime fechaInicio { get; set; }
   public DateTime fechaFin { get; set; }
-  public DateTime fechaAutorizacion { get; set; }
+  public DateTime? fechaAutorizacion { get; set; }
   public long id_autorizo { get; set; }
 
-  public double diasHabiles { get; set; }
+  public double? diasHabiles { get; set; }
   
 }
 
